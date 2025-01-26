@@ -44,6 +44,7 @@ dependencies:
   shimmer: ^3.0.0
   flutter_screenutil: ^5.9.3
   flutter_svg: ^2.0.10+1
+  salomon_bottom_bar: ^3.3.2
 
 
 dev_dependencies:

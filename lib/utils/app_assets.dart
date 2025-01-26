@@ -3,6 +3,6 @@ class AppAssets {
   static const imagesUrl = "assets/images";
 
   // Auth
-  static const emailWhite = "$svgUrl/email.svg";
+  static const emailWhite = "$imagesUrl/email white.png";
   static const authWhite = "$svgUrl/auth.svg";
 }

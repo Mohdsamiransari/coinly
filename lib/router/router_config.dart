@@ -1,5 +1,7 @@
 import 'package:coinly/auth/ui/sign_in_screen.dart';
+import 'package:coinly/auth/ui/sign_up_screen.dart';
 import 'package:coinly/auth/ui/splash_screen.dart';
+import 'package:coinly/dashboard/ui/dashboard_screen.dart';
 import 'package:coinly/router/router_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -19,6 +21,21 @@ class AppRouterConfig {
       pageBuilder: (context, state) {
         return const MaterialPage(child: SignInScreen());
       },
-    )
+    ),
+    GoRoute(
+      path: "/signUpScreen",
+      name: RouterConstant.signUpScreen,
+      pageBuilder: (context, state) {
+        return const MaterialPage(child: SignUpScreen());
+      },
+    ),
+    GoRoute(
+      path: "/dashboardScreen",
+      name: RouterConstant.dashboardScreen,
+      pageBuilder: (context, state) {
+        return const MaterialPage(child: DashboardScreen());
+      },
+    ),
+
   ]);
 }
