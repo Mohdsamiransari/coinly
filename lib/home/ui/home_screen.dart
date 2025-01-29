@@ -109,6 +109,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                   _buildAnimatedWidget(child: const AiAssistantWidget(), index: 4),
                   CommonSizedBoxWidget.height(16.h),
                   _buildAnimatedWidget(child: const RecentTransactionWidget(), index: 5),
+                  CommonSizedBoxWidget.height(50.h),
                 ],
               ),
             ),

@@ -34,63 +34,64 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom > 80;
+
     return Scaffold(
       body: SafeArea(
         child: Stack(
-          
           children: [
             renderScreen(_currentIndex),
-            Align(
+            if (!isKeyboardOpen)
+              Align(
+                alignment: AlignmentDirectional.bottomCenter,
+                child: Container(
+                  width: 304,
+                  decoration: BoxDecoration(
+                    color: AppColors.white, // Dark background color
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  child: SalomonBottomBar(
+                    currentIndex: _currentIndex,
+                    onTap: (i) => setState(() => _currentIndex = i),
+                    items: [
+                      /// Home
+                      SalomonBottomBarItem(
+                        icon: const Icon(Icons.home),
+                        title: const SizedBox.shrink(), // No title text
+                        selectedColor: AppColors.black, // Active color
+                      ),
 
-              alignment: AlignmentDirectional.bottomCenter,
-              child: Container(
-                width: 304,
-                decoration: BoxDecoration(
-                  color: AppColors.white, // Dark background color
-                  borderRadius: BorderRadius.circular(50),
-                ),
-                child: SalomonBottomBar(
-                  currentIndex: _currentIndex,
-                  onTap: (i) => setState(() => _currentIndex = i),
-                  items: [
-                    /// Home
-                    SalomonBottomBarItem(
-                      icon: const Icon(Icons.home),
-                      title: const SizedBox.shrink(), // No title text
-                      selectedColor: AppColors.black, // Active color
-                    ),
+                      /// Group
+                      SalomonBottomBarItem(
+                        icon: const Icon(Icons.group),
+                        title: const SizedBox.shrink(),
+                        selectedColor: AppColors.black,
+                      ),
 
-                    /// Group
-                    SalomonBottomBarItem(
-                      icon: const Icon(Icons.group),
-                      title: const SizedBox.shrink(),
-                      selectedColor: AppColors.black,
-                    ),
+                      /// Analytics
+                      SalomonBottomBarItem(
+                        icon: const Icon(Icons.bar_chart),
+                        title: const SizedBox.shrink(),
+                        selectedColor: AppColors.black,
+                      ),
 
-                    /// Analytics
-                    SalomonBottomBarItem(
-                      icon: const Icon(Icons.bar_chart),
-                      title: const SizedBox.shrink(),
-                      selectedColor: AppColors.black,
-                    ),
+                      /// Calendar
+                      SalomonBottomBarItem(
+                        icon: const Icon(Icons.calendar_today),
+                        title: const SizedBox.shrink(),
+                        selectedColor: AppColors.black,
+                      ),
 
-                    /// Calendar
-                    SalomonBottomBarItem(
-                      icon: const Icon(Icons.calendar_today),
-                      title: const SizedBox.shrink(),
-                      selectedColor: AppColors.black,
-                    ),
-
-                    /// Profile
-                    SalomonBottomBarItem(
-                      icon: const Icon(Icons.person),
-                      title: const SizedBox.shrink(),
-                      selectedColor: AppColors.black,
-                    ),
-                  ],
+                      /// Profile
+                      SalomonBottomBarItem(
+                        icon: const Icon(Icons.person),
+                        title: const SizedBox.shrink(),
+                        selectedColor: AppColors.black,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
           ],
         ),
       ),

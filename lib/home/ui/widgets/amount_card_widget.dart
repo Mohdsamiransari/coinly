@@ -29,6 +29,7 @@ class AmountCardWidget extends StatelessWidget {
 
   _addBalanceModal(BuildContext context) {
     return showBottomSheet(
+      
       context: context,
       backgroundColor: AppColors.secondaryBlue,
       showDragHandle: true,
