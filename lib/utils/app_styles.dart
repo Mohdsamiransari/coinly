@@ -6,7 +6,14 @@ enum FontWeightVariant { bold, semiBold, medium, regular }
 
 enum ColorVariant { white, black, primary, secondary, primaryWhite }
 
-enum SizeVariant { small, medium, large, extraLarge, extraExtraLarge }
+enum SizeVariant {
+  small,
+  medium,
+  mediumLarge,
+  large,
+  extraLarge,
+  extraExtraLarge
+}
 
 class AppTextStyles {
   // Mapping enums to actual values
@@ -28,6 +35,7 @@ class AppTextStyles {
   static const Map<SizeVariant, double> sizeVariants = {
     SizeVariant.small: 12.0,
     SizeVariant.medium: 16.0,
+    SizeVariant.mediumLarge: 20.0,
     SizeVariant.large: 24.0,
     SizeVariant.extraLarge: 32.0,
     SizeVariant.extraExtraLarge: 42.0
