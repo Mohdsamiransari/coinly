@@ -18,36 +18,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  late ScrollController _scrollController;
-  bool _isVisible = true; // Controls whether widgets are in the tree
 
-  @override
-  void initState() {
-    super.initState();
-    _scrollController = ScrollController();
-    _scrollController.addListener(_onScroll);
-  }
-
-  void _onScroll() {
-    if (_scrollController.offset > 200 && _isVisible) {
-      // Remove widgets when scrolling down
-      setState(() {
-        _isVisible = false;
-      });
-    } else if (_scrollController.offset <= 200 && !_isVisible) {
-      // Re-add widgets when scrolling back to the top
-      setState(() {
-        _isVisible = true;
-      });
-    }
-  }
-
-  @override
-  void dispose() {
-    _scrollController.removeListener(_onScroll);
-    _scrollController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,66 +36,18 @@ class _HomeScreenState extends State<HomeScreen> {
             hintText: AppStrings.search,
           ),
           CommonSizedBoxWidget.height(16.h),
-          // Content with scrollable section
           Expanded(
             child: SingleChildScrollView(
-              controller: _scrollController,
-              // physics: _isVisible
-              //     ? NeverScrollableScrollPhysics()
-              //     : AlwaysScrollableScrollPhysics(),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Widgets above RecentTransactionWidget
-                  AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 500),
-                    child: _isVisible
-                        ? Column(
-                            key: const Key("amount_card"),
-                            children: [
-                              const AmountCardWidget(),
-                              CommonSizedBoxWidget.height(16.h),
-                            ],
-                          )
-                        : const SizedBox.shrink(),
-                  ),
-                  AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 500),
-                    child: _isVisible
-                        ? Column(
-                            key: const Key("credit_debit_scan"),
-                            children: [
-                              const CreditDebitScanWidget(),
-                              CommonSizedBoxWidget.height(16.h),
-                            ],
-                          )
-                        : const SizedBox.shrink(),
-                  ),
-                  AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 500),
-                    child: _isVisible
-                        ? Column(
-                            key: const Key("ai_assistant"),
-                            children: [
-                              const AiAssistantWidget(),
-                              CommonSizedBoxWidget.height(16.h),
-                            ],
-                          )
-                        : const SizedBox.shrink(),
-                  ),
-                  // RecentTransactionWidget sticking to the top
-
-                  AnimatedSlide(
-                    duration: const Duration(milliseconds: 700),
-                    offset: _isVisible ? Offset.zero : Offset(0, -0.1),
-                    child: Column(
-                      children: [
-                        if (!_isVisible) CommonSizedBoxWidget.height(300.h),
-                        const RecentTransactionWidget(),
-                      ],
-                    ),
-                  ),
-                  // Adding extra padding to ensure visibility when _isVisible is false
+                  const AmountCardWidget(),
+                  CommonSizedBoxWidget.height(16.h),
+                  const CreditDebitScanWidget(),
+                  CommonSizedBoxWidget.height(16.h),
+                  const AiAssistantWidget(),
+                  CommonSizedBoxWidget.height(16.h),
+                  const RecentTransactionWidget(),
                 ],
               ),
             ),
