@@ -1,8 +1,8 @@
-import 'package:coinly/analytics/ui/analytics_screen.dart';
-import 'package:coinly/expense/ui/expense_screen.dart';
-import 'package:coinly/friends/ui/friends_screen.dart';
-import 'package:coinly/home/ui/home_screen.dart';
-import 'package:coinly/profile/ui/profile_screen.dart';
+import 'package:coinly/components/analytics/ui/analytics_screen.dart';
+import 'package:coinly/components/expense/ui/expense_screen.dart';
+import 'package:coinly/components/ui/friends_screen.dart';
+import 'package:coinly/components/home/ui/home_screen.dart';
+import 'package:coinly/components/profile/ui/profile_screen.dart';
 import 'package:coinly/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:salomon_bottom_bar/salomon_bottom_bar.dart';

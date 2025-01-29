@@ -1,7 +1,7 @@
-import 'package:coinly/common/common_button_widget.dart';
-import 'package:coinly/common/common_elevated_button_widget.dart';
+import 'package:coinly/components/common/common_button_widget.dart';
+import 'package:coinly/components/common/common_elevated_button_widget.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:coinly/common/common_sized_box_widget.dart';
+import 'package:coinly/components/common/common_sized_box_widget.dart';
 import 'package:coinly/utils/app_colors.dart';
 import 'package:coinly/utils/app_styles.dart';
 import 'package:flutter/material.dart';

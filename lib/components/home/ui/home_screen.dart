@@ -1,10 +1,10 @@
-import 'package:coinly/common/common_input_widget.dart';
-import 'package:coinly/common/common_sized_box_widget.dart';
-import 'package:coinly/home/ui/widgets/ai_assistant_widget.dart';
-import 'package:coinly/home/ui/widgets/amount_card_widget.dart';
-import 'package:coinly/home/ui/widgets/credit_debit_scan_widget.dart';
-import 'package:coinly/home/ui/widgets/recent_transaction_widget.dart';
-import 'package:coinly/home/ui/widgets/user_notification_widget.dart';
+import 'package:coinly/components/common/common_input_widget.dart';
+import 'package:coinly/components/common/common_sized_box_widget.dart';
+import 'package:coinly/components/home/ui/widgets/ai_assistant_widget.dart';
+import 'package:coinly/components/home/ui/widgets/amount_card_widget.dart';
+import 'package:coinly/components/home/ui/widgets/credit_debit_scan_widget.dart';
+import 'package:coinly/components/home/ui/widgets/recent_transaction_widget.dart';
+import 'package:coinly/components/home/ui/widgets/user_notification_widget.dart';
 import 'package:coinly/utils/app_colors.dart';
 import 'package:coinly/utils/app_strings.dart';
 import 'package:flutter/material.dart';

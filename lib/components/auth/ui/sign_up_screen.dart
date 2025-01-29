@@ -1,19 +1,18 @@
-
-import 'package:coinly/common/common_button_widget.dart';
-import 'package:coinly/common/common_input_widget.dart';
-import 'package:coinly/common/common_sized_box_widget.dart';
-import 'package:coinly/common/image_preview.dart';
+import 'package:coinly/components/common/common_button_widget.dart';
+import 'package:coinly/components/common/common_input_widget.dart';
+import 'package:coinly/components/common/common_sized_box_widget.dart';
+import 'package:coinly/components/common/image_preview.dart';
 import 'package:coinly/router/router_constant.dart';
 import 'package:coinly/utils/app_assets.dart';
 import 'package:coinly/utils/app_colors.dart';
 import 'package:coinly/utils/app_strings.dart';
 import 'package:coinly/utils/app_styles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:go_router/go_router.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class SignInScreen extends StatelessWidget {
-  const SignInScreen({super.key});
+class SignUpScreen extends StatelessWidget {
+  const SignUpScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +31,7 @@ class SignInScreen extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  AppStrings.loginToYourAccount,
+                  AppStrings.createNewAccount,
                   style: AppTextStyles.getStyle(
                       colorVariant: ColorVariant.white,
                       sizeVariant: SizeVariant.extraLarge,
@@ -42,7 +41,7 @@ class SignInScreen extends StatelessWidget {
                 CommonInputWidget(
                   fillColor: AppColors.secondaryBlue.withOpacity(.5),
                   isFilled: true,
-                  hintText: AppStrings.email,
+                  hintText: AppStrings.userName,
                   prefixIcon:
                       // Icon(Icons.email)
                       ImagePreview(
@@ -55,10 +54,19 @@ class SignInScreen extends StatelessWidget {
                 CommonInputWidget(
                   fillColor: AppColors.secondaryBlue.withOpacity(.5),
                   isFilled: true,
+                  hintText: AppStrings.email,
+                  prefixIcon: ImagePreview(
+                    path: "assets/images/email white.png",
+                    width: 24.h,
+                    height: 24.w,
+                  ),
+                ),
+                CommonSizedBoxWidget.height(16.h),
+                CommonInputWidget(
+                  fillColor: AppColors.secondaryBlue.withOpacity(.5),
+                  isFilled: true,
                   hintText: AppStrings.password,
-                  prefixIcon:
-                      // Icon(Icons.password)
-                      ImagePreview(
+                  prefixIcon: ImagePreview(
                     path: "assets/images/shield white.png",
                     width: 24.r,
                     height: 24.r,
@@ -66,10 +74,8 @@ class SignInScreen extends StatelessWidget {
                 ),
                 CommonSizedBoxWidget.height(16.h),
                 CommonButtonWidget(
-                  onPressed: () {
-                    GoRouter.of(context).goNamed(RouterConstant.dashboardScreen);
-                  },
-                  btnLabel: AppStrings.signIn,
+                  onPressed: () {},
+                  btnLabel: AppStrings.signUp,
                 ),
                 CommonSizedBoxWidget.height(24.h),
                 Row(
@@ -111,10 +117,9 @@ class SignInScreen extends StatelessWidget {
                       padding: EdgeInsets.symmetric(horizontal: 8.r),
                       child: IconButton(
                         onPressed: () {},
-                        icon: ImagePreview(
+                        icon: const ImagePreview(
                           path: AppAssets.emailWhite,
-                          width: 24.r,
-                          height: 24.r,color: Colors.black,
+                          color: Colors.black,
                         ),
                         color: Colors.white,
                         style: ButtonStyle(
@@ -134,13 +139,13 @@ class SignInScreen extends StatelessWidget {
                 CommonSizedBoxWidget.height(24.h),
                 InkWell(
                   onTap: () {
-                    GoRouter.of(context).goNamed(RouterConstant.signUpScreen);
+                    GoRouter.of(context).goNamed(RouterConstant.signInScreen);
                   },
                   splashColor: Colors.transparent,
                   highlightColor: Colors.transparent,
                   child: Text.rich(
                     TextSpan(
-                      text: AppStrings.dontHaveAccount,
+                      text: AppStrings.alreadyHaveAnAccount,
                       style: AppTextStyles.getStyle(
                         colorVariant: ColorVariant.primaryWhite,
                         sizeVariant: SizeVariant.medium,
@@ -148,7 +153,7 @@ class SignInScreen extends StatelessWidget {
                       ),
                       children: [
                         TextSpan(
-                          text: AppStrings.signUp,
+                          text: AppStrings.signIn,
                           style: AppTextStyles.getStyle(
                             colorVariant: ColorVariant.white,
                             sizeVariant: SizeVariant.medium,

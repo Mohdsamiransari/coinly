@@ -1,4 +1,4 @@
-import 'package:coinly/common/common_sized_box_widget.dart';
+import 'package:coinly/components/common/common_sized_box_widget.dart';
 import 'package:coinly/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:coinly/utils/app_strings.dart';
