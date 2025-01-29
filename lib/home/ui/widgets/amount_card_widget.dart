@@ -1,3 +1,5 @@
+import 'package:coinly/common/common_button_widget.dart';
+import 'package:coinly/common/common_input_widget.dart';
 import 'package:coinly/common/common_sized_box_widget.dart';
 import 'package:coinly/utils/app_colors.dart';
 import 'package:coinly/utils/app_strings.dart';
@@ -10,11 +12,56 @@ class AmountCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        _buildTopContainer(),
-        _buildBottomContainer(),
-      ],
+    return InkWell(
+      onTap: () {
+        _addBalanceModal(context);
+      },
+      splashColor: Colors.transparent,
+      highlightColor: Colors.transparent,
+      child: Column(
+        children: [
+          _buildTopContainer(),
+          _buildBottomContainer(),
+        ],
+      ),
+    );
+  }
+
+  _addBalanceModal(BuildContext context) {
+    return showBottomSheet(
+      context: context,
+      backgroundColor: AppColors.secondaryBlue,
+      showDragHandle: true,
+      builder: (context) {
+        return Padding(
+          padding: EdgeInsets.all(16.r),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(
+                "Set your current balance to accurately reflect your finances.",
+                style: AppTextStyles.getStyle(
+                  colorVariant: ColorVariant.white,
+                  sizeVariant: SizeVariant.medium,
+                  fontWeightVariant: FontWeightVariant.medium,
+                ),
+              ),
+              CommonSizedBoxWidget.height(16.h),
+              const CommonInputWidget(
+                isFilled: true,
+                fillColor: AppColors.white,
+                hintText: "Add Current Balance",
+              ),
+              CommonSizedBoxWidget.height(16.h),
+              CommonButtonWidget(
+                onPressed: () {},
+                btnLabel: "Add",
+              ),
+              CommonSizedBoxWidget.height(16.h),
+            ],
+          ),
+        );
+      },
     );
   }
 
