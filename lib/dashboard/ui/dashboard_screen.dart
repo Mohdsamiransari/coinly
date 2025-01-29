@@ -37,9 +37,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Scaffold(
       body: SafeArea(
         child: Stack(
+          
           children: [
             renderScreen(_currentIndex),
             Align(
+
               alignment: AlignmentDirectional.bottomCenter,
               child: Container(
                 width: 304,

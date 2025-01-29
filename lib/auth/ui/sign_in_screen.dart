@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:coinly/common/common_button_widget.dart';
 import 'package:coinly/common/common_input_widget.dart';

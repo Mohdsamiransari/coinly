@@ -10,4 +10,16 @@ class AppStrings {
   static const String signUp = "Sign Up";
   static const String dontHaveAccount = "Don't have an account? ";
   static const String alreadyHaveAnAccount = "Already have an account? ";
+
+  // Home
+  static const String search = "Search";
+  static const String totalBalance = "Total Balance";
+  static const String totalDebit = "Total Debit";
+  static const String totalCredit = "Total Credit";
+  static const String recentTransactions= "Recent Transactions";
+
+  // Ai Assistant 
+  static const String aiAssistant = "AI Assistant";
+
+
 }
