@@ -13,5 +13,8 @@ class RouterConstant{
   // Debit Credit
   static String debitCreditExpenseScreen = "debitCreditExpenseScreen";
 
+  // QR Code
+  static String userQrCodeScreen = "userQrCodeScreen";
+
 
 }

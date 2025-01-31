@@ -68,6 +68,9 @@ class CreditDebitScanWidget extends StatelessWidget {
         ),
         CommonSizedBoxWidget.width(8.h),
         CommonButtonWidget(
+          onPressed: () {
+            GoRouter.of(context).pushNamed(RouterConstant.userQrCodeScreen);
+          },
           backgroundColor: AppColors.secondaryBlue,
           width: 38.r,
           height: 38.r,

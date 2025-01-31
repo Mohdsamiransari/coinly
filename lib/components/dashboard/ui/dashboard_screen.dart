@@ -1,6 +1,6 @@
 import 'package:coinly/components/analytics/ui/analytics_screen.dart';
 import 'package:coinly/components/expense/ui/expense_screen.dart';
-import 'package:coinly/components/ui/friends_screen.dart';
+import 'package:coinly/components/friends/ui/friends_screen.dart';
 import 'package:coinly/components/home/ui/home_screen.dart';
 import 'package:coinly/components/profile/ui/profile_screen.dart';
 import 'package:coinly/utils/app_colors.dart';
