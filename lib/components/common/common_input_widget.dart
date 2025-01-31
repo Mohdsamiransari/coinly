@@ -15,6 +15,10 @@ class CommonInputWidget extends StatelessWidget {
   final String? prefixText;
   final TextCapitalization? textCapitalization;
   final String? hintText;
+  final TextStyle? hintTextStyle;
+  final TextInputType? textInputType;
+  final Widget? suffixIcon;
+  final String? suffixText;
 
   const CommonInputWidget({
     super.key,
@@ -30,12 +34,17 @@ class CommonInputWidget extends StatelessWidget {
     this.prefixText,
     this.textCapitalization,
     this.hintText,
+    this.hintTextStyle,
+    this.textInputType,
+    this.suffixIcon,
+    this.suffixText,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
+      keyboardType: textInputType,
       style: textStyle ??
           AppTextStyles.getStyle(
             colorVariant: ColorVariant.white,
@@ -50,8 +59,16 @@ class CommonInputWidget extends StatelessWidget {
         fillColor: fillColor,
         filled: isFilled,
         hintText: hintText,
+        hintStyle: hintTextStyle ??
+            AppTextStyles.getStyle(
+              colorVariant: ColorVariant.primaryWhite,
+              sizeVariant: SizeVariant.medium,
+              fontWeightVariant: FontWeightVariant.medium,
+            ),
         prefixIcon: prefixIcon,
         prefixText: prefixText,
+        suffixIcon: suffixIcon,
+        suffixText: suffixText,
         border: OutlineInputBorder(
           borderRadius: borderRadius ?? BorderRadius.circular(25.r),
           borderSide: borderSide ?? BorderSide.none,

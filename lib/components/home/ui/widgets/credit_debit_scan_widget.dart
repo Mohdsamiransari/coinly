@@ -1,10 +1,12 @@
 import 'package:coinly/components/common/common_button_widget.dart';
 import 'package:coinly/components/common/common_elevated_button_widget.dart';
+import 'package:coinly/router/router_constant.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:coinly/components/common/common_sized_box_widget.dart';
 import 'package:coinly/utils/app_colors.dart';
 import 'package:coinly/utils/app_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class CreditDebitScanWidget extends StatelessWidget {
   const CreditDebitScanWidget({
@@ -18,6 +20,12 @@ class CreditDebitScanWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       children: [
         CommonElevatedButtonWidget(
+          onPressed: () {
+            GoRouter.of(context)
+                .pushNamed(RouterConstant.debitCreditExpenseScreen, extra: {
+              "isDebitScreen": true,
+            });
+          },
           label: Text(
             "Debit",
             style: AppTextStyles.getStyle(
@@ -34,6 +42,12 @@ class CreditDebitScanWidget extends StatelessWidget {
         ),
         CommonSizedBoxWidget.width(8.h),
         CommonElevatedButtonWidget(
+          onPressed: () {
+            GoRouter.of(context)
+                .pushNamed(RouterConstant.debitCreditExpenseScreen, extra: {
+              "isDebitScreen": false,
+            });
+          },
           backgroundColor: AppColors.secondaryBlue,
           label: Text(
             "Credit",

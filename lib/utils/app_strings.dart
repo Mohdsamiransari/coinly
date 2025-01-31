@@ -21,5 +21,11 @@ class AppStrings {
   // Ai Assistant 
   static const String aiAssistant = "AI Assistant";
 
+  // Debit 
+  static const String amount = "Amount";
+  static const String expenseName = "Name";
+  static const String date = "Date";
+  static const String otherDetails = "Other Details";
+
 
 }

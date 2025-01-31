@@ -8,6 +8,7 @@ enum ColorVariant { white, black, primary, secondary, primaryWhite }
 
 enum SizeVariant {
   small,
+  mediumSmall,
   medium,
   mediumLarge,
   large,
@@ -34,6 +35,7 @@ class AppTextStyles {
 
   static const Map<SizeVariant, double> sizeVariants = {
     SizeVariant.small: 12.0,
+    SizeVariant.mediumSmall: 14.0,
     SizeVariant.medium: 16.0,
     SizeVariant.mediumLarge: 20.0,
     SizeVariant.large: 24.0,

@@ -2,12 +2,14 @@ import 'package:coinly/components/auth/ui/sign_in_screen.dart';
 import 'package:coinly/components/auth/ui/sign_up_screen.dart';
 import 'package:coinly/components/auth/ui/splash_screen.dart';
 import 'package:coinly/components/dashboard/ui/dashboard_screen.dart';
+import 'package:coinly/components/expense/ui/debit_credit_expense_screen.dart';
 import 'package:coinly/router/router_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class AppRouterConfig {
   static final GoRouter router = GoRouter(routes: [
+    // Auth
     GoRoute(
       path: "/",
       name: RouterConstant.splashScreen,
@@ -29,6 +31,8 @@ class AppRouterConfig {
         return const MaterialPage(child: SignUpScreen());
       },
     ),
+
+    // Dashboard
     GoRoute(
       path: "/dashboardScreen",
       name: RouterConstant.dashboardScreen,
@@ -37,5 +41,18 @@ class AppRouterConfig {
       },
     ),
 
+    // Debit Credit
+
+    GoRoute(
+      path: "/debitCreditExpenseScreen",
+      name: RouterConstant.debitCreditExpenseScreen,
+      pageBuilder: (context, state) {
+        final data = state.extra as Map<String, dynamic>;
+        return MaterialPage(
+            child: DebitCreditExpenseScreen(
+          isDebitScreen: data["isDebitScreen"],
+        ));
+      },
+    ),
   ]);
 }
