@@ -7,6 +7,7 @@ import 'package:coinly/components/home/ui/widgets/recent_transaction_widget.dart
 import 'package:coinly/components/home/ui/widgets/user_notification_widget.dart';
 import 'package:coinly/utils/app_colors.dart';
 import 'package:coinly/utils/app_strings.dart';
+import 'package:coinly/utils/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -88,11 +89,16 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           _buildAnimatedWidget(child: const UserNotificationWidget(), index: 0),
           CommonSizedBoxWidget.height(24.h),
           _buildAnimatedWidget(
-            child: const CommonInputWidget(
+            child: CommonInputWidget(
               isFilled: true,
               fillColor: AppColors.white,
-              prefixIcon: Icon(Icons.search_rounded),
+              prefixIcon: const Icon(Icons.search_rounded),
               hintText: AppStrings.search,
+              hintTextStyle: AppTextStyles.getStyle(
+                colorVariant: ColorVariant.black,
+                sizeVariant: SizeVariant.medium,
+                fontWeightVariant: FontWeightVariant.medium,
+              ),
             ),
             index: 1,
           ),
@@ -102,13 +108,17 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  _buildAnimatedWidget(child: const AmountCardWidget(), index: 2),
+                  _buildAnimatedWidget(
+                      child: const AmountCardWidget(), index: 2),
                   CommonSizedBoxWidget.height(16.h),
-                  _buildAnimatedWidget(child: const CreditDebitScanWidget(), index: 3),
+                  _buildAnimatedWidget(
+                      child: const CreditDebitScanWidget(), index: 3),
                   CommonSizedBoxWidget.height(16.h),
-                  _buildAnimatedWidget(child: const AiAssistantWidget(), index: 4),
+                  _buildAnimatedWidget(
+                      child: const AiAssistantWidget(), index: 4),
                   CommonSizedBoxWidget.height(16.h),
-                  _buildAnimatedWidget(child: const RecentTransactionWidget(), index: 5),
+                  _buildAnimatedWidget(
+                      child: const RecentTransactionWidget(), index: 5),
                   CommonSizedBoxWidget.height(50.h),
                 ],
               ),

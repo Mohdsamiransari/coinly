@@ -19,6 +19,7 @@ class CommonInputWidget extends StatelessWidget {
   final TextInputType? textInputType;
   final Widget? suffixIcon;
   final String? suffixText;
+  final Function(String)? onChanged;
 
   const CommonInputWidget({
     super.key,
@@ -38,12 +39,17 @@ class CommonInputWidget extends StatelessWidget {
     this.textInputType,
     this.suffixIcon,
     this.suffixText,
+    this.onChanged,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
+      onTapOutside: (event) {
+        FocusManager.instance.primaryFocus!.unfocus();
+      },
+      onChanged: onChanged,
       keyboardType: textInputType,
       style: textStyle ??
           AppTextStyles.getStyle(

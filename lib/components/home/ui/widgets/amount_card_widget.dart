@@ -28,38 +28,63 @@ class AmountCardWidget extends StatelessWidget {
   }
 
   _addBalanceModal(BuildContext context) {
-    return showBottomSheet(
-      
+    return showModalBottomSheet(
       context: context,
-      backgroundColor: AppColors.secondaryBlue,
       showDragHandle: true,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
       builder: (context) {
-        return Padding(
-          padding: EdgeInsets.all(16.r),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                "Set your current balance to accurately reflect your finances.",
-                style: AppTextStyles.getStyle(
-                  colorVariant: ColorVariant.white,
-                  sizeVariant: SizeVariant.medium,
-                  fontWeightVariant: FontWeightVariant.medium,
-                ),
+        return AnimatedPadding(
+          duration: const Duration(milliseconds: 300),
+          padding:
+              EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          child: Container(
+            decoration: BoxDecoration(
+              color: AppColors.secondaryBlue,
+              borderRadius: BorderRadius.vertical(top: Radius.circular(24.r)),
+            ),
+            child: Padding(
+              padding: EdgeInsets.all(16.r),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    height: 4,
+                    width: 60,
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.5),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  CommonSizedBoxWidget.height(8.h),
+                  Text(
+                    AppStrings.setYourCurrentBalance,
+                    style: AppTextStyles.getStyle(
+                      colorVariant: ColorVariant.white,
+                      sizeVariant: SizeVariant.medium,
+                      fontWeightVariant: FontWeightVariant.medium,
+                    ),
+                  ),
+                  CommonSizedBoxWidget.height(16.h),
+                  CommonInputWidget(
+                    isFilled: true,
+                    fillColor: AppColors.white,
+                    hintText: AppStrings.addYourCurrentBalance,
+                    hintTextStyle: AppTextStyles.getStyle(
+                      colorVariant: ColorVariant.black,
+                      sizeVariant: SizeVariant.medium,
+                      fontWeightVariant: FontWeightVariant.medium,
+                    ),
+                  ),
+                  CommonSizedBoxWidget.height(16.h),
+                  CommonButtonWidget(
+                    onPressed: () {},
+                    btnLabel: AppStrings.add,
+                  ),
+                  CommonSizedBoxWidget.height(16.h),
+                ],
               ),
-              CommonSizedBoxWidget.height(16.h),
-              const CommonInputWidget(
-                isFilled: true,
-                fillColor: AppColors.white,
-                hintText: "Add Current Balance",
-              ),
-              CommonSizedBoxWidget.height(16.h),
-              CommonButtonWidget(
-                onPressed: () {},
-                btnLabel: "Add",
-              ),
-              CommonSizedBoxWidget.height(16.h),
-            ],
+            ),
           ),
         );
       },

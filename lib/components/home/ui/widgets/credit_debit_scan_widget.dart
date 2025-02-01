@@ -1,6 +1,7 @@
 import 'package:coinly/components/common/common_button_widget.dart';
 import 'package:coinly/components/common/common_elevated_button_widget.dart';
 import 'package:coinly/router/router_constant.dart';
+import 'package:coinly/utils/app_strings.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:coinly/components/common/common_sized_box_widget.dart';
 import 'package:coinly/utils/app_colors.dart';
@@ -27,7 +28,7 @@ class CreditDebitScanWidget extends StatelessWidget {
             });
           },
           label: Text(
-            "Debit",
+            AppStrings.debit,
             style: AppTextStyles.getStyle(
               colorVariant: ColorVariant.black,
               sizeVariant: SizeVariant.medium,
@@ -50,7 +51,7 @@ class CreditDebitScanWidget extends StatelessWidget {
           },
           backgroundColor: AppColors.secondaryBlue,
           label: Text(
-            "Credit",
+            AppStrings.credit,
             style: AppTextStyles.getStyle(
               colorVariant: ColorVariant.white,
               sizeVariant: SizeVariant.medium,
