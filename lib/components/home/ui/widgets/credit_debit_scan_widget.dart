@@ -91,7 +91,7 @@ class CreditDebitScanWidget extends StatelessWidget {
             size: 24.r,
             color: AppColors.white,
           ),
-        )
+        ),
       ],
     );
   }

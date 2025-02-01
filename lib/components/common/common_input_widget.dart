@@ -20,6 +20,10 @@ class CommonInputWidget extends StatelessWidget {
   final Widget? suffixIcon;
   final String? suffixText;
   final Function(String)? onChanged;
+  final Function()? onTap;
+  final bool? readOnly;
+  final String? initialValue;
+  final String? Function(String?)? validator;
 
   const CommonInputWidget({
     super.key,
@@ -40,6 +44,10 @@ class CommonInputWidget extends StatelessWidget {
     this.suffixIcon,
     this.suffixText,
     this.onChanged,
+    this.onTap,
+    this.readOnly,
+    this.initialValue,
+    this.validator,
   });
 
   @override
@@ -49,7 +57,10 @@ class CommonInputWidget extends StatelessWidget {
       onTapOutside: (event) {
         FocusManager.instance.primaryFocus!.unfocus();
       },
+      readOnly: readOnly ?? false,
+      initialValue: initialValue,
       onChanged: onChanged,
+      onTap: onTap,
       keyboardType: textInputType,
       style: textStyle ??
           AppTextStyles.getStyle(
@@ -59,6 +70,8 @@ class CommonInputWidget extends StatelessWidget {
           ),
       obscureText: obscureText,
       textCapitalization: textCapitalization ?? TextCapitalization.sentences,
+      validator: validator,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       decoration: InputDecoration(
         contentPadding:
             contentPadding ?? EdgeInsets.symmetric(horizontal: 16.w),
@@ -79,6 +92,11 @@ class CommonInputWidget extends StatelessWidget {
           borderRadius: borderRadius ?? BorderRadius.circular(25.r),
           borderSide: borderSide ?? BorderSide.none,
         ),
+        enabledBorder: OutlineInputBorder(
+          borderRadius: borderRadius ?? BorderRadius.circular(8.r),
+          borderSide: borderSide ?? BorderSide.none,
+        ),
+       
       ),
     );
   }

@@ -1,6 +1,7 @@
 class AppStrings {
   // Common
   static const String add = "Add";
+  static const String next = "Next";
 
   // Auth
   static const String appName = "COINLY";
@@ -37,6 +38,9 @@ class AppStrings {
   // Add Amount Bottom Sheet
   static const String setYourCurrentBalance = "Set your current balance to accurately reflect your finances.";
   static const String addYourCurrentBalance = "Add Current Balance";
+
+  // Expense
+  static const String expense = "Expense";
 
 
 

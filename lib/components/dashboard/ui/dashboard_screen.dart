@@ -51,6 +51,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     borderRadius: BorderRadius.circular(50),
                   ),
                   child: SalomonBottomBar(
+                    
                     currentIndex: _currentIndex,
                     onTap: (i) => setState(() => _currentIndex = i),
                     items: [
