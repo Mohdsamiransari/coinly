@@ -1,3 +1,4 @@
+import 'dart:developer';
 
 import 'package:coinly/components/common/common_button_widget.dart';
 import 'package:coinly/components/common/common_input_widget.dart';
@@ -10,10 +11,39 @@ import 'package:coinly/utils/app_strings.dart';
 import 'package:coinly/utils/app_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
-class SignInScreen extends StatelessWidget {
+class SignInScreen extends StatefulWidget {
   const SignInScreen({super.key});
+
+  @override
+  State<SignInScreen> createState() => _SignInScreenState();
+}
+
+class _SignInScreenState extends State<SignInScreen> {
+  final FocusNode emailFocusNode = FocusNode();
+  final FocusNode passwordFocusNode = FocusNode();
+
+  List<String> signInIcons = [
+    AppAssets.faceBook,
+    AppAssets.google,
+    AppAssets.apple
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+    emailFocusNode.addListener(() => setState(() {}));
+    passwordFocusNode.addListener(() => setState(() {}));
+  }
+
+  @override
+  void dispose() {
+    emailFocusNode.dispose();
+    passwordFocusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,34 +70,37 @@ class SignInScreen extends StatelessWidget {
                 ),
                 CommonSizedBoxWidget.height(32.h),
                 CommonInputWidget(
+                  borderRadius: BorderRadius.circular(8.r),
+                  focusNode: emailFocusNode,
                   fillColor: AppColors.secondaryBlue.withOpacity(.5),
                   isFilled: true,
                   hintText: AppStrings.email,
-                  prefixIcon:
-                      // Icon(Icons.email)
-                      ImagePreview(
-                    path: "assets/images/email white.png",
-                    width: 24.h,
-                    height: 24.w,
+                  prefixIcon: const ImagePreview(
+                    path: AppAssets.email,
+                    fit: BoxFit.contain,
+                    color: AppColors.primaryGrey,
                   ),
                 ),
                 CommonSizedBoxWidget.height(16.h),
                 CommonInputWidget(
+                  borderRadius: BorderRadius.circular(8.r),
+                  focusNode: passwordFocusNode,
                   fillColor: AppColors.secondaryBlue.withOpacity(.5),
                   isFilled: true,
                   hintText: AppStrings.password,
-                  prefixIcon:
-                      // Icon(Icons.password)
-                      ImagePreview(
-                    path: "assets/images/shield white.png",
-                    width: 24.r,
-                    height: 24.r,
+                  prefixIcon: ImagePreview(
+                    path: AppAssets.auth,
+                    fit: BoxFit.contain,
+                    color: passwordFocusNode.hasFocus
+                        ? AppColors.white
+                        : AppColors.primaryGrey,
                   ),
                 ),
                 CommonSizedBoxWidget.height(16.h),
                 CommonButtonWidget(
                   onPressed: () {
-                    GoRouter.of(context).goNamed(RouterConstant.dashboardScreen);
+                    GoRouter.of(context)
+                        .goNamed(RouterConstant.dashboardScreen);
                   },
                   btnLabel: AppStrings.signIn,
                 ),
@@ -109,21 +142,34 @@ class SignInScreen extends StatelessWidget {
                     3,
                     (index) => Padding(
                       padding: EdgeInsets.symmetric(horizontal: 8.r),
-                      child: IconButton(
-                        onPressed: () {},
-                        icon: ImagePreview(
-                          path: AppAssets.emailWhite,
-                          width: 24.r,
-                          height: 24.r,color: Colors.black,
-                        ),
-                        color: Colors.white,
-                        style: ButtonStyle(
-                          fixedSize: WidgetStateProperty.all(Size(50.r, 50.r)),
-                          backgroundColor:
-                              WidgetStateProperty.all(Colors.white),
-                          shape: WidgetStateProperty.all(
-                            const RoundedRectangleBorder(
-                              borderRadius: BorderRadius.zero,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(8.r),
+                        child: IconButton(
+                          onPressed: () {
+                            if (index == 0) {
+                              log("FaceBook");
+                            } else if (index == 1) {
+                              log("Google");
+                            } else {
+                              log("Apple");
+                            }
+                          },
+                          icon: ImagePreview(
+                            path: signInIcons[index],
+                            width: 24.r,
+                            height: 24.r,
+                            // color: Colors.black,
+                          ),
+                          color: Colors.white,
+                          style: ButtonStyle(
+                            fixedSize:
+                                WidgetStateProperty.all(Size(50.r, 50.r)),
+                            backgroundColor:
+                                WidgetStateProperty.all(Colors.white),
+                            shape: WidgetStateProperty.all(
+                              const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.zero,
+                              ),
                             ),
                           ),
                         ),

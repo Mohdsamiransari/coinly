@@ -1,10 +1,12 @@
 import 'package:coinly/components/common/common_input_widget.dart';
 import 'package:coinly/components/common/common_sized_box_widget.dart';
+import 'package:coinly/components/common/image_preview.dart';
 import 'package:coinly/components/home/ui/widgets/ai_assistant_widget.dart';
 import 'package:coinly/components/home/ui/widgets/amount_card_widget.dart';
 import 'package:coinly/components/home/ui/widgets/credit_debit_scan_widget.dart';
 import 'package:coinly/components/home/ui/widgets/recent_transaction_widget.dart';
 import 'package:coinly/components/home/ui/widgets/user_notification_widget.dart';
+import 'package:coinly/utils/app_assets.dart';
 import 'package:coinly/utils/app_colors.dart';
 import 'package:coinly/utils/app_strings.dart';
 import 'package:coinly/utils/app_styles.dart';
@@ -22,6 +24,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   late List<AnimationController> _controllers;
   late List<Animation<Offset>> _slideAnimations;
   late List<Animation<double>> _fadeAnimations;
+  final FocusNode searchFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -46,6 +49,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     }).toList();
 
     _startAnimations();
+    searchFocusNode.addListener(() => setState(() {}));
   }
 
   void _startAnimations() async {
@@ -60,6 +64,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     for (var controller in _controllers) {
       controller.dispose();
     }
+    searchFocusNode.dispose();
     super.dispose();
   }
 
@@ -90,15 +95,21 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
           CommonSizedBoxWidget.height(24.h),
           _buildAnimatedWidget(
             child: CommonInputWidget(
+              borderRadius: BorderRadius.circular(8.r),
               isFilled: true,
+              focusNode: searchFocusNode,
               fillColor: AppColors.white,
-              prefixIcon: const Icon(Icons.search_rounded),
+              prefixIcon: ImagePreview(
+                path: AppAssets.search,
+                color: searchFocusNode.hasFocus ? AppColors.black: AppColors.primaryGrey,
+              ),
               hintText: AppStrings.search,
               hintTextStyle: AppTextStyles.getStyle(
                 colorVariant: ColorVariant.black,
                 sizeVariant: SizeVariant.medium,
                 fontWeightVariant: FontWeightVariant.medium,
               ),
+              
             ),
             index: 1,
           ),

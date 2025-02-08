@@ -232,31 +232,37 @@ class _DebitExpenseScreenState extends State<DebitCreditExpenseScreen>
       showDragHandle: true,
       context: context,
       builder: (context) {
-        return ScrollDateTimePicker(
-          itemExtent: 54,
-          infiniteScroll: true,
-          style: DateTimePickerStyle(
-            activeStyle: AppTextStyles.getStyle(
-              colorVariant: ColorVariant.white,
-              sizeVariant: SizeVariant.medium,
-              fontWeightVariant: FontWeightVariant.medium,
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ScrollDateTimePicker(
+              itemExtent: 54,
+              infiniteScroll: true,
+              style: DateTimePickerStyle(
+                activeStyle: AppTextStyles.getStyle(
+                  colorVariant: ColorVariant.white,
+                  sizeVariant: SizeVariant.medium,
+                  fontWeightVariant: FontWeightVariant.medium,
+                ),
+                inactiveStyle: AppTextStyles.getStyle(
+                  colorVariant: ColorVariant.primaryWhite,
+                  sizeVariant: SizeVariant.medium,
+                  fontWeightVariant: FontWeightVariant.medium,
+                ),
+              ),
+              dateOption: DateTimePickerOption(
+                dateFormat: DateFormat('yyyyMMMdd'),
+                minDate: DateTime(1999, 12),
+                maxDate: DateTime(2099, 12),
+                initialDate: _selectTime,
+              ),
+              onChange: (datetime) => setState(() {
+                _selectTime = datetime;
+                _dateController.text = _formatDate(datetime);
+              }),
             ),
-            inactiveStyle: AppTextStyles.getStyle(
-              colorVariant: ColorVariant.primaryWhite,
-              sizeVariant: SizeVariant.medium,
-              fontWeightVariant: FontWeightVariant.medium,
-            ),
-          ),
-          dateOption: DateTimePickerOption(
-            dateFormat: DateFormat('yyyyMMMdd'),
-            minDate: DateTime(1999, 12),
-            maxDate: DateTime(2099, 12),
-            initialDate: _selectTime,
-          ),
-          onChange: (datetime) => setState(() {
-            _selectTime = datetime;
-            _dateController.text = _formatDate(datetime);
-          }),
+            CommonSizedBoxWidget.height(20.h),
+          ],
         );
       },
     );

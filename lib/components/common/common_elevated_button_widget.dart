@@ -24,6 +24,7 @@ class CommonElevatedButtonWidget extends StatelessWidget {
       style: ButtonStyle(
         backgroundColor:
             WidgetStatePropertyAll(backgroundColor ?? AppColors.white),
+            
       ),
     );
   }
