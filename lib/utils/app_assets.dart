@@ -10,4 +10,8 @@ class AppAssets {
   static const google = "assets/svg/google.svg";
   static const apple = "assets/svg/apple.svg";
   static const search = "assets/svg/search.svg";
+  static const edit = "assets/svg/edit.svg";
+  static const eye = "assets/svg/eye.svg";
+  static const eyeCrossed = "assets/svg/eye-crossed.svg";
+  static const circleUser = "assets/svg/circle-user.svg";
 }

@@ -124,6 +124,10 @@ class _CommonInputWidgetState extends State<CommonInputWidget> {
         prefixText: widget.prefixText,
         suffixIcon: widget.suffixIcon,
         suffixText: widget.suffixText,
+        suffixIconConstraints: BoxConstraints(
+          maxWidth: 34.r,
+          maxHeight: 20.r,
+        ),
         border: OutlineInputBorder(
           borderRadius: widget.borderRadius ?? BorderRadius.circular(25.r),
           borderSide: widget.borderSide ?? BorderSide.none,
