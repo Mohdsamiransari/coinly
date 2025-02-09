@@ -39,6 +39,8 @@ class _SignInScreenState extends State<SignInScreen> {
   void initState() {
     super.initState();
     authBloc = context.read<AuthBloc>();
+    emailFocusNode.addListener(() => setState(() {}));
+    passwordFocusNode.addListener(() => setState(() {}));
   }
 
   @override
@@ -134,7 +136,8 @@ class _SignInScreenState extends State<SignInScreen> {
             prefixIcon: ImagePreview(
               path: AppAssets.email,
               fit: BoxFit.contain,
-              color: emailFocusNode.hasFocus
+              color: emailFocusNode.hasFocus ||
+                      authBloc.emailController.text.isNotEmpty
                   ? AppColors.white
                   : AppColors.primaryGrey,
             ),
@@ -156,7 +159,8 @@ class _SignInScreenState extends State<SignInScreen> {
             prefixIcon: ImagePreview(
               path: AppAssets.auth,
               fit: BoxFit.contain,
-              color: passwordFocusNode.hasFocus
+              color: passwordFocusNode.hasFocus ||
+                      authBloc.passwordController.text.isNotEmpty
                   ? AppColors.white
                   : AppColors.primaryGrey,
             ),

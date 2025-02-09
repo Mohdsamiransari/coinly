@@ -7,7 +7,6 @@ part 'qr_state.dart';
 class QrBloc extends Bloc<QrEvent, QrState> {
   QrBloc() : super(QrInitial()) {
     on<QrEvent>((event, emit) {
-      // TODO: implement event handler
     });
   }
 }

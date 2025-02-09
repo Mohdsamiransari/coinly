@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 // Enums for font weights, colors, and sizes
 enum FontWeightVariant { bold, semiBold, medium, regular }
 
-enum ColorVariant { white, black, primary, secondary, primaryWhite }
+enum ColorVariant { white, black, primary, secondary, primaryWhite, error }
 
 enum SizeVariant {
   small,
@@ -31,6 +31,7 @@ class AppTextStyles {
     ColorVariant.primary: AppColors.primaryBlue,
     ColorVariant.secondary: AppColors.secondaryBlue,
     ColorVariant.primaryWhite: AppColors.primaryWhite,
+    ColorVariant.error : AppColors.error
   };
 
   static const Map<SizeVariant, double> sizeVariants = {

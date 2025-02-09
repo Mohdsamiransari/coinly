@@ -34,12 +34,16 @@ class _SignUpScreenState extends State<SignUpScreen> {
   void initState() {
     super.initState();
     authBloc = context.read<AuthBloc>();
+    emailFocusNode.addListener(() => setState(() {}));
+    passwordFocusNode.addListener(() => setState(() {}));
+    userNameFocusNode.addListener(() => setState(() {}));
   }
 
   @override
   void dispose() {
     emailFocusNode.dispose();
     passwordFocusNode.dispose();
+    userNameFocusNode.dispose();
     super.dispose();
   }
 
@@ -130,7 +134,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
               path: AppAssets.circleUser,
               width: 100,
               fit: BoxFit.contain,
-              color: userNameFocusNode.hasFocus
+              color: userNameFocusNode.hasFocus ||
+                      authBloc.usernameController.text.isNotEmpty
                   ? AppColors.white
                   : AppColors.primaryGrey,
             ),
@@ -155,7 +160,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
             prefixIcon: ImagePreview(
               path: AppAssets.email,
               fit: BoxFit.contain,
-              color: emailFocusNode.hasFocus
+              color: emailFocusNode.hasFocus ||
+                      authBloc.emailController.text.isNotEmpty
                   ? AppColors.white
                   : AppColors.primaryGrey,
             ),
@@ -177,7 +183,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
             prefixIcon: ImagePreview(
               path: AppAssets.auth,
               fit: BoxFit.contain,
-              color: passwordFocusNode.hasFocus
+              color: passwordFocusNode.hasFocus ||
+                      authBloc.passwordController.text.isNotEmpty
                   ? AppColors.white
                   : AppColors.primaryGrey,
             ),

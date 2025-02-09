@@ -24,8 +24,8 @@ class CommonInputWidget extends StatefulWidget {
   final bool? readOnly;
   final String? initialValue;
   final String? Function(String?)? validator;
-  final FocusNode? focusNode; // <-- Added focusNode parameter
-  final Function(bool)? onFocusChange; // Callback for focus state
+  final FocusNode? focusNode;
+  final Function(bool)? onFocusChange;
 
   const CommonInputWidget({
     super.key,

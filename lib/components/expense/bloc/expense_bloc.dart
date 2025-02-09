@@ -7,7 +7,6 @@ part 'expense_state.dart';
 class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
   ExpenseBloc() : super(ExpenseInitial()) {
     on<ExpenseEvent>((event, emit) {
-      // TODO: implement event handler
     });
   }
 }

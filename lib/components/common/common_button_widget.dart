@@ -47,7 +47,7 @@ class CommonButtonWidget extends StatelessWidget {
                       AppTextStyles.getStyle(
                         colorVariant: ColorVariant.black,
                         sizeVariant: SizeVariant.medium,
-                        fontWeightVariant: FontWeightVariant.medium,
+                        fontWeightVariant: FontWeightVariant.bold,
                       ),
                 ),
           )),
