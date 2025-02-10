@@ -1,4 +1,6 @@
 import 'package:coinly/components/common/common_sized_box_widget.dart';
+import 'package:coinly/components/common/image_preview.dart';
+import 'package:coinly/utils/app_assets.dart';
 import 'package:coinly/utils/app_colors.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:coinly/utils/app_strings.dart';
@@ -10,6 +12,33 @@ class RecentTransactionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List<Map<String, dynamic>> transactions = [
+      {
+        "title": "Electricity Bill",
+        "date": "4 September",
+        "time": "8:30 pm",
+        "amount": 150,
+        "expenseType": "electricity",
+        "iconUrl": "assets/images/expenseicon1.png"
+      },
+      {
+        "title": "Groceries",
+        "date": "4 September",
+        "time": "9:00 pm",
+        "amount": 50,
+        "expenseType": "grocery",
+        "iconUrl": "assets/images/expenseicon2.png"
+      },
+      {
+        "title": "Dinner",
+        "date": "5 September",
+        "time": "8:00 pm",
+        "amount": 100,
+        "expenseType": "food",
+        "iconUrl": "assets/images/expenseicon3.png"
+      },
+    ];
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -22,6 +51,7 @@ class RecentTransactionWidget extends StatelessWidget {
             fontWeightVariant: FontWeightVariant.semiBold,
           ),
         ),
+        CommonSizedBoxWidget.height(16.h),
         ListView.separated(
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
@@ -31,16 +61,11 @@ class RecentTransactionWidget extends StatelessWidget {
               dense: true,
               minTileHeight: 40.h,
               leading: CircleAvatar(
-                backgroundColor: AppColors.secondaryBlue,
-                radius: 22.r,
-                child: Icon(
-                  Icons.fastfood_rounded,
-                  size: 20.r,
-                  color: AppColors.white,
-                ),
-              ),
+                  backgroundColor: AppColors.secondaryBlue,
+                  radius: 22.r,
+                  child: ImagePreview(path: transactions[index]["iconUrl"])),
               title: Text(
-                "Electricity Bill",
+                transactions[index]["title"],
                 style: AppTextStyles.getStyle(
                   colorVariant: ColorVariant.white,
                   sizeVariant: SizeVariant.medium,
@@ -48,7 +73,7 @@ class RecentTransactionWidget extends StatelessWidget {
                 ),
               ),
               subtitle: Text(
-                "4 September - 8:30 pm",
+                "${transactions[index]["date"]} - ${transactions[index]["time"]}",
                 style: AppTextStyles.getStyle(
                   colorVariant: ColorVariant.primaryWhite,
                   sizeVariant: SizeVariant.small,
@@ -56,7 +81,7 @@ class RecentTransactionWidget extends StatelessWidget {
                 ),
               ),
               trailing: Text(
-                "-\$150",
+                "-\$${transactions[index]["amount"]}",
                 style: AppTextStyles.getStyle(
                   colorVariant: ColorVariant.white,
                   sizeVariant: SizeVariant.mediumLarge,
@@ -67,7 +92,7 @@ class RecentTransactionWidget extends StatelessWidget {
           },
           separatorBuilder: (context, index) =>
               CommonSizedBoxWidget.height(8.h),
-          itemCount: 16,
+          itemCount: transactions.length,
         ),
       ],
     );

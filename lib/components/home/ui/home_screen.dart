@@ -1,6 +1,7 @@
 import 'package:coinly/components/common/common_input_widget.dart';
 import 'package:coinly/components/common/common_sized_box_widget.dart';
 import 'package:coinly/components/common/image_preview.dart';
+import 'package:coinly/components/home/bloc/home_bloc.dart';
 import 'package:coinly/components/home/ui/widgets/ai_assistant_widget.dart';
 import 'package:coinly/components/home/ui/widgets/amount_card_widget.dart';
 import 'package:coinly/components/home/ui/widgets/credit_debit_scan_widget.dart';
@@ -11,6 +12,7 @@ import 'package:coinly/utils/app_colors.dart';
 import 'package:coinly/utils/app_strings.dart';
 import 'package:coinly/utils/app_styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -21,6 +23,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
+  late HomeBloc _homeBloc;
   late List<AnimationController> _controllers;
   late List<Animation<Offset>> _slideAnimations;
   late List<Animation<double>> _fadeAnimations;
@@ -29,7 +32,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-
+    _homeBloc = context.read<HomeBloc>();
     _controllers = List.generate(6, (index) {
       return AnimationController(
         vsync: this,
@@ -86,57 +89,69 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(18.r),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildAnimatedWidget(child: const UserNotificationWidget(), index: 0),
-          CommonSizedBoxWidget.height(24.h),
-          _buildAnimatedWidget(
-            child: CommonInputWidget(
-              borderRadius: BorderRadius.circular(8.r),
-              isFilled: true,
-              focusNode: searchFocusNode,
-              fillColor: AppColors.white,
-              prefixIcon: ImagePreview(
-                path: AppAssets.search,
-                color: searchFocusNode.hasFocus ? AppColors.black: AppColors.primaryGrey,
+    return BlocBuilder<HomeBloc, HomeState>(
+      builder: (context, state) {
+        return Padding(
+          padding: EdgeInsets.all(18.r),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _buildAnimatedWidget(
+                  child: const UserNotificationWidget(), index: 0),
+              CommonSizedBoxWidget.height(24.h),
+              _buildAnimatedWidget(
+                child: CommonInputWidget(
+                  borderRadius: BorderRadius.circular(24.r),
+                  isFilled: true,
+                  focusNode: searchFocusNode,
+                  fillColor: AppColors.white,
+                  prefixIcon: ImagePreview(
+                    path: AppAssets.search,
+                    width: 40.w,
+                    color: searchFocusNode.hasFocus
+                        ? AppColors.black
+                        : AppColors.primaryGrey,
+                  ),
+                  hintText: AppStrings.search,
+                  hintTextStyle: AppTextStyles.getStyle(
+                    colorVariant: searchFocusNode.hasFocus
+                        ? ColorVariant.black
+                        : ColorVariant.primaryGrey,
+                    sizeVariant: SizeVariant.medium,
+                    fontWeightVariant: FontWeightVariant.medium,
+                  ),
+                ),
+                index: 1,
               ),
-              hintText: AppStrings.search,
-              hintTextStyle: AppTextStyles.getStyle(
-                colorVariant: ColorVariant.black,
-                sizeVariant: SizeVariant.medium,
-                fontWeightVariant: FontWeightVariant.medium,
+              CommonSizedBoxWidget.height(16.h),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildAnimatedWidget(
+                          child: AmountCardWidget(
+                            homeBloc: _homeBloc,
+                          ),
+                          index: 2),
+                      CommonSizedBoxWidget.height(16.h),
+                      _buildAnimatedWidget(
+                          child: const CreditDebitScanWidget(), index: 3),
+                      CommonSizedBoxWidget.height(16.h),
+                      _buildAnimatedWidget(
+                          child: const AiAssistantWidget(), index: 4),
+                      CommonSizedBoxWidget.height(16.h),
+                      _buildAnimatedWidget(
+                          child: const RecentTransactionWidget(), index: 5),
+                      CommonSizedBoxWidget.height(50.h),
+                    ],
+                  ),
+                ),
               ),
-              
-            ),
-            index: 1,
+            ],
           ),
-          CommonSizedBoxWidget.height(16.h),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildAnimatedWidget(
-                      child: const AmountCardWidget(), index: 2),
-                  CommonSizedBoxWidget.height(16.h),
-                  _buildAnimatedWidget(
-                      child: const CreditDebitScanWidget(), index: 3),
-                  CommonSizedBoxWidget.height(16.h),
-                  _buildAnimatedWidget(
-                      child: const AiAssistantWidget(), index: 4),
-                  CommonSizedBoxWidget.height(16.h),
-                  _buildAnimatedWidget(
-                      child: const RecentTransactionWidget(), index: 5),
-                  CommonSizedBoxWidget.height(50.h),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
 }

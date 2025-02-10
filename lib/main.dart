@@ -1,4 +1,5 @@
 import 'package:coinly/components/auth/bloc/auth_bloc.dart';
+import 'package:coinly/components/home/bloc/home_bloc.dart';
 import 'package:coinly/router/router_config.dart';
 import 'package:coinly/utils/app_colors.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,9 @@ class MyApp extends StatelessWidget {
         providers: [
           BlocProvider(
             create: (context) => AuthBloc(),
+          ),
+          BlocProvider(
+            create: (context) => HomeBloc(),
           )
         ],
         child: MaterialApp.router(

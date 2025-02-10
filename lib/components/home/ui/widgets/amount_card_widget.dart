@@ -1,29 +1,39 @@
 import 'package:coinly/components/common/common_button_widget.dart';
 import 'package:coinly/components/common/common_input_widget.dart';
 import 'package:coinly/components/common/common_sized_box_widget.dart';
+import 'package:coinly/components/common/image_preview.dart';
+import 'package:coinly/components/home/bloc/home_bloc.dart';
+import 'package:coinly/utils/app_assets.dart';
 import 'package:coinly/utils/app_colors.dart';
 import 'package:coinly/utils/app_strings.dart';
 import 'package:coinly/utils/app_styles.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class AmountCardWidget extends StatelessWidget {
-  const AmountCardWidget({super.key});
+  final HomeBloc homeBloc;
+  const AmountCardWidget({super.key, required this.homeBloc});
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
-        _addBalanceModal(context);
+    return BlocBuilder<HomeBloc, HomeState>(
+      builder: (context, state) {
+        return InkWell(
+          onTap: () {
+            _addBalanceModal(context);
+          },
+          splashColor: Colors.transparent,
+          highlightColor: Colors.transparent,
+          child: Column(
+            children: [
+              _buildTopContainer(),
+              _buildBottomContainer(),
+            ],
+          ),
+        );
       },
-      splashColor: Colors.transparent,
-      highlightColor: Colors.transparent,
-      child: Column(
-        children: [
-          _buildTopContainer(),
-          _buildBottomContainer(),
-        ],
-      ),
     );
   }
 
@@ -67,6 +77,8 @@ class AmountCardWidget extends StatelessWidget {
                   ),
                   CommonSizedBoxWidget.height(16.h),
                   CommonInputWidget(
+                    borderRadius: BorderRadius.circular(24.r),
+                    controller: homeBloc.amountController,
                     isFilled: true,
                     fillColor: AppColors.white,
                     hintText: AppStrings.addYourCurrentBalance,
@@ -75,10 +87,18 @@ class AmountCardWidget extends StatelessWidget {
                       sizeVariant: SizeVariant.medium,
                       fontWeightVariant: FontWeightVariant.medium,
                     ),
+                    textStyle: AppTextStyles.getStyle(
+                      colorVariant: ColorVariant.black,
+                      sizeVariant: SizeVariant.medium,
+                      fontWeightVariant: FontWeightVariant.medium,
+                    ),
                   ),
                   CommonSizedBoxWidget.height(16.h),
                   CommonButtonWidget(
-                    onPressed: () {},
+                    onPressed: () {
+                      homeBloc.add(AddNewTotalBalanceEvent());
+                      GoRouter.of(context).pop();
+                    },
                     btnLabel: AppStrings.add,
                   ),
                   CommonSizedBoxWidget.height(16.h),
@@ -104,17 +124,29 @@ class AmountCardWidget extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              AppStrings.totalBalance,
-              style: AppTextStyles.getStyle(
-                colorVariant: ColorVariant.primaryWhite,
-                sizeVariant: SizeVariant.small,
-                fontWeightVariant: FontWeightVariant.medium,
-              ),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  AppStrings.totalBalance,
+                  style: AppTextStyles.getStyle(
+                    colorVariant: ColorVariant.primaryWhite,
+                    sizeVariant: SizeVariant.small,
+                    fontWeightVariant: FontWeightVariant.medium,
+                  ),
+                ),
+                ImagePreview(
+                  path: AppAssets.edit,
+                  width: 12.r,
+                  height: 12.r,
+                  color: AppColors.primaryWhite,
+                )
+              ],
             ),
             CommonSizedBoxWidget.height(8.h),
             Text(
-              "\$74,348",
+              "\$${homeBloc.totalBalance}",
               style: AppTextStyles.getStyle(
                 colorVariant: ColorVariant.white,
                 sizeVariant: SizeVariant.extraLarge,
