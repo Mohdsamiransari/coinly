@@ -65,4 +65,8 @@ class AppStrings {
 
   // Expense
   static const String expense = "Expense";
+
+  // Friends
+  static const String owedByYou = "Owed by you";
+  static const String owedToYou = "Owed to you";
 }

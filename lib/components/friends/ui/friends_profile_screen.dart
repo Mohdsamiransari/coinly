@@ -1,5 +1,7 @@
 import 'package:coinly/components/common/common_sized_box_widget.dart';
 import 'package:coinly/components/common/image_preview.dart';
+import 'package:coinly/components/friends/ui/widgets/amount_owe_text_card_widget.dart';
+import 'package:coinly/utils/app_strings.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:coinly/utils/app_colors.dart';
 import 'package:coinly/utils/app_styles.dart';
@@ -37,14 +39,17 @@ class FriendsProfileScreen extends StatelessWidget {
         child: Column(
           children: [
             CommonSizedBoxWidget.height(50.h),
-            Center(
-              child: CircleAvatar(
-                maxRadius: 60.r,
-                child: ImagePreview(
-                  width: 120.r,
-                  height: 120.r,
-                  path: friendProfileImage,
-                  fit: BoxFit.fill,
+            Hero(
+              tag: "profile_$friendEmail",
+              child: Center(
+                child: CircleAvatar(
+                  maxRadius: 60.r,
+                  child: ImagePreview(
+                    width: 120.r,
+                    height: 120.r,
+                    path: friendProfileImage,
+                    fit: BoxFit.fill,
+                  ),
                 ),
               ),
             ),
@@ -71,59 +76,24 @@ class FriendsProfileScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const AmountOweTextCard(
+                const AmountOweTextCardWidget(
                   amount: 16,
-                  owedBy: "Owed by you",
+                  owedBy: AppStrings.owedByYou,
                 ),
                 Container(
                   height: 30.h,
                   width: 2.w,
                   color: AppColors.white,
                 ),
-                const AmountOweTextCard(
+                const AmountOweTextCardWidget(
                   amount: 20,
-                  owedBy: "Owed to you",
+                  owedBy: AppStrings.owedToYou,
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),
-    );
-  }
-}
-
-class AmountOweTextCard extends StatelessWidget {
-  final double amount;
-  final String owedBy;
-  const AmountOweTextCard({
-    super.key,
-    required this.amount,
-    required this.owedBy,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Text.rich(
-      TextSpan(
-        text: "\$$amount\n",
-        style: AppTextStyles.getStyle(
-          colorVariant: ColorVariant.white,
-          sizeVariant: SizeVariant.mediumLarge,
-          fontWeightVariant: FontWeightVariant.medium,
-        ),
-        children: [
-          TextSpan(
-            text: owedBy,
-            style: AppTextStyles.getStyle(
-              colorVariant: ColorVariant.primaryWhite,
-              sizeVariant: SizeVariant.mediumLarge,
-              fontWeightVariant: FontWeightVariant.medium,
-            ),
-          ),
-        ],
-      ),
-      textAlign: TextAlign.center,
     );
   }
 }

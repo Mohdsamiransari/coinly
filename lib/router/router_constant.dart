@@ -17,4 +17,5 @@ class RouterConstant {
 
   // Friends
   static String friendsProfileScreen = "friendsProfileScreen";
+  static String searchFriendsScreen = "searchFriendsScreen";
 }

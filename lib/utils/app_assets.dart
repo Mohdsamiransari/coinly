@@ -14,4 +14,8 @@ class AppAssets {
   static const eye = "assets/svg/eye.svg";
   static const eyeCrossed = "assets/svg/eye-crossed.svg";
   static const circleUser = "assets/svg/circle-user.svg";
+
+  // Friends
+  static const persons = "assets/svg/persons.svg";
+  static const qrCodeWhiteScan = "assets/svg/qr-code-white.svg";
 }

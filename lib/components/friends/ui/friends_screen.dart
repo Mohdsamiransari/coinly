@@ -23,11 +23,11 @@ class _FriendsScreenState extends State<FriendsScreen>
   late List<Animation<Offset>> _friendSlideAnimations;
   late List<Animation<double>> _opacityAnimations;
 
-  final List<Map<String, dynamic>> connectionData = [
-    {"title": "Find People", "icon": AppAssets.apple},
-    {"title": "Invite Friend", "icon": AppAssets.email},
-    {"title": "Scan QR", "icon": AppAssets.eye},
-  ];
+  void connectionFunction() {
+    GoRouter.of(context).pushNamed(RouterConstant.searchFriendsScreen);
+  }
+
+  final List<Map<String, dynamic>> connectionData = [];
 
   final List<Map<String, dynamic>> users = [
     {
@@ -65,6 +65,27 @@ class _FriendsScreenState extends State<FriendsScreen>
   @override
   void initState() {
     super.initState();
+    connectionData.addAll([
+      {
+        "title": "Find People",
+        "icon": AppAssets.persons,
+        "onTap": () => connectionFunction(), // Use a lambda function
+      },
+      {
+        "title": "Invite Friend",
+        "icon": AppAssets.email,
+        "onTap": () {
+          // Handle invite friend action
+        },
+      },
+      {
+        "title": "Scan QR",
+        "icon": AppAssets.qrCodeWhiteScan,
+        "onTap": () {
+          // Handle QR Scan action
+        },
+      },
+    ]);
     _animationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 1200));
 
@@ -135,7 +156,7 @@ class _FriendsScreenState extends State<FriendsScreen>
                 width: 24.r,
                 height: 24.r,
                 backgroundColor: Colors.transparent,
-                onPressed: () {},
+                onPressed: () => connectionFunction(),
                 btnChild: ImagePreview(
                   path: AppAssets.search,
                   color: AppColors.white,
@@ -159,9 +180,9 @@ class _FriendsScreenState extends State<FriendsScreen>
                 return SlideTransition(
                   position: _connectionSlideAnimations[index],
                   child: connectionCard(
-                    title: connectionData[index]["title"],
-                    icon: connectionData[index]["icon"],
-                  ),
+                      title: connectionData[index]["title"],
+                      icon: connectionData[index]["icon"],
+                      onTap: connectionData[index]["onTap"]),
                 );
               },
             ),
@@ -193,10 +214,14 @@ class _FriendsScreenState extends State<FriendsScreen>
                       },
                       contentPadding: EdgeInsets.zero,
                       dense: true,
-                      leading: CircleAvatar(
-                        backgroundColor: AppColors.secondaryBlue,
-                        radius: 22.r,
-                        child: ImagePreview(path: users[index]["imageUrl"]),
+                      leading: Hero(
+                        tag:
+                            "profile_${users[index]["email"]}", // Unique tag for each user
+                        child: CircleAvatar(
+                          backgroundColor: AppColors.secondaryBlue,
+                          radius: 22.r,
+                          child: ImagePreview(path: users[index]["imageUrl"]),
+                        ),
                       ),
                       title: Text(
                         users[index]["name"],
@@ -234,35 +259,42 @@ class _FriendsScreenState extends State<FriendsScreen>
   }
 
   /// **Connection Card Widget**
-  Widget connectionCard({required String title, required String icon}) {
-    return Container(
-      height: 130.r,
-      width: 130.r,
-      padding: EdgeInsets.all(16.r),
-      decoration: BoxDecoration(
-        color: AppColors.secondaryBlue,
-        borderRadius: BorderRadius.circular(12.r),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Spacer(),
-          ImagePreview(
-            path: icon,
-            color: AppColors.white,
-            width: 24.r,
-            height: 24.r,
-          ),
-          CommonSizedBoxWidget.height(4.h),
-          Text(
-            title,
-            style: AppTextStyles.getStyle(
-              colorVariant: ColorVariant.white,
-              sizeVariant: SizeVariant.medium,
-              fontWeightVariant: FontWeightVariant.medium,
+  Widget connectionCard({
+    required String title,
+    required String icon,
+    required Function() onTap,
+  }) {
+    return InkWell(
+      onTap: onTap,
+      child: Container(
+        height: 130.r,
+        width: 130.r,
+        padding: EdgeInsets.all(16.r),
+        decoration: BoxDecoration(
+          color: AppColors.secondaryBlue,
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Spacer(),
+            ImagePreview(
+              path: icon,
+              color: AppColors.white,
+              width: 22.r,
+              height: 22.r,
             ),
-          )
-        ],
+            CommonSizedBoxWidget.height(4.h),
+            Text(
+              title,
+              style: AppTextStyles.getStyle(
+                colorVariant: ColorVariant.white,
+                sizeVariant: SizeVariant.medium,
+                fontWeightVariant: FontWeightVariant.medium,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
