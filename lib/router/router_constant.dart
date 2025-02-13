@@ -1,4 +1,4 @@
-class RouterConstant{
+class RouterConstant {
   //Auth
   static String splashScreen = "splashScreen";
   static String signInScreen = "signInScreen";
@@ -8,7 +8,6 @@ class RouterConstant{
   // Home
   static String dashboardScreen = "dashboardScreen";
   static String homeScreen = "homeScreen";
-  
 
   // Debit Credit
   static String debitCreditExpenseScreen = "debitCreditExpenseScreen";
@@ -16,5 +15,6 @@ class RouterConstant{
   // QR Code
   static String userQrCodeScreen = "userQrCodeScreen";
 
-
+  // Friends
+  static String friendsProfileScreen = "friendsProfileScreen";
 }
