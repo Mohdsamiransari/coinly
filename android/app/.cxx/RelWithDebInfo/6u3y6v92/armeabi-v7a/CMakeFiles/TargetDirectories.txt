@@ -1,0 +1,2 @@
+/Users/macbook/personal/coinly/android/app/.cxx/RelWithDebInfo/6u3y6v92/armeabi-v7a/CMakeFiles/edit_cache.dir
+/Users/macbook/personal/coinly/android/app/.cxx/RelWithDebInfo/6u3y6v92/armeabi-v7a/CMakeFiles/rebuild_cache.dir
