@@ -14,6 +14,7 @@ class RouterConstant {
 
   // QR Code
   static String userQrCodeScreen = "userQrCodeScreen";
+  static String qrCodeScannerScreen = "qrCodeScannerScreen";
 
   // Friends
   static String friendsProfileScreen = "friendsProfileScreen";

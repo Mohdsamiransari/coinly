@@ -5,6 +5,7 @@ import 'package:coinly/components/dashboard/ui/dashboard_screen.dart';
 import 'package:coinly/components/expense/ui/debit_credit_expense_screen.dart';
 import 'package:coinly/components/friends/ui/friends_profile_screen.dart';
 import 'package:coinly/components/friends/ui/search_friends_screen.dart';
+import 'package:coinly/components/qr/ui/qr_code_scanner_screen.dart';
 import 'package:coinly/components/qr/ui/user_qr_code_screen.dart';
 import 'package:coinly/router/router_constant.dart';
 import 'package:flutter/material.dart';
@@ -64,6 +65,13 @@ class AppRouterConfig {
       name: RouterConstant.userQrCodeScreen,
       pageBuilder: (context, state) {
         return const MaterialPage(child: UserQrCodeScreen());
+      },
+    ),
+    GoRoute(
+      path: "/qrCodeScannerScreen",
+      name: RouterConstant.qrCodeScannerScreen,
+      pageBuilder: (context, state) {
+        return const MaterialPage(child: QrCodeScannerScreen());
       },
     ),
 

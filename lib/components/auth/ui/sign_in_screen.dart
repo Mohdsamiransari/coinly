@@ -187,9 +187,9 @@ class _SignInScreenState extends State<SignInScreen> {
           CommonSizedBoxWidget.height(16.h),
           CommonButtonWidget(
             onPressed: () {
-              if (_formKey.currentState!.validate()) {
+              // if (_formKey.currentState!.validate()) {
                 GoRouter.of(context).goNamed(RouterConstant.dashboardScreen);
-              }
+              // }
             },
             btnLabel: AppStrings.signIn,
           ),

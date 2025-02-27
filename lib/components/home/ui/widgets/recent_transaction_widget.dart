@@ -94,6 +94,7 @@ class RecentTransactionWidget extends StatelessWidget {
               CommonSizedBoxWidget.height(8.h),
           itemCount: transactions.length,
         ),
+      
       ],
     );
   }

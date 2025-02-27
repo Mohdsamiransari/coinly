@@ -17,7 +17,7 @@ class AmountOweTextCardWidget extends StatelessWidget {
         text: "\$$amount\n",
         style: AppTextStyles.getStyle(
           colorVariant: ColorVariant.white,
-          sizeVariant: SizeVariant.mediumLarge,
+          sizeVariant: SizeVariant.medium,
           fontWeightVariant: FontWeightVariant.medium,
         ),
         children: [
@@ -25,7 +25,7 @@ class AmountOweTextCardWidget extends StatelessWidget {
             text: owedBy,
             style: AppTextStyles.getStyle(
               colorVariant: ColorVariant.primaryWhite,
-              sizeVariant: SizeVariant.mediumLarge,
+              sizeVariant: SizeVariant.medium,
               fontWeightVariant: FontWeightVariant.medium,
             ),
           ),

@@ -82,7 +82,7 @@ class _FriendsScreenState extends State<FriendsScreen>
         "title": "Scan QR",
         "icon": AppAssets.qrCodeWhiteScan,
         "onTap": () {
-          // Handle QR Scan action
+          GoRouter.of(context).pushNamed(RouterConstant.qrCodeScannerScreen);
         },
       },
     ]);
