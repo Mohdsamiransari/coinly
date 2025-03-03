@@ -212,6 +212,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
                 GoRouter.of(context).goNamed(RouterConstant.dashboardScreen);
               }
             },
+            width: MediaQuery.of(context).size.width,
             btnLabel: AppStrings.signUp,
           ),
         ],

@@ -13,6 +13,9 @@ class CommonButtonWidget extends StatelessWidget {
   final Widget? btnChild;
   final AlignmentGeometry alignment;
   final EdgeInsets? padding;
+  final BorderSide? border;
+  final BorderRadius? borderRadius;
+
   const CommonButtonWidget({
     super.key,
     this.width,
@@ -24,33 +27,43 @@ class CommonButtonWidget extends StatelessWidget {
     this.btnChild,
     this.alignment = Alignment.center,
     this.padding,
+    this.border,
+    this.borderRadius,
   });
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: width ?? double.infinity,
-      height: height ?? 36.h,
-      child: TextButton(
-          onPressed: onPressed,
-          style: ButtonStyle(
-            padding: WidgetStatePropertyAll(padding ?? EdgeInsets.zero),
-            backgroundColor:
-                WidgetStatePropertyAll(backgroundColor ?? AppColors.white),
-          ),
-          child: Align(
-            alignment: alignment,
-            child: btnChild ??
-                Text(
-                  btnLabel ?? "",
-                  style: btnLabelStyle ??
-                      AppTextStyles.getStyle(
-                        colorVariant: ColorVariant.black,
-                        sizeVariant: SizeVariant.medium,
-                        fontWeightVariant: FontWeightVariant.bold,
-                      ),
+    return IntrinsicWidth(
+      child: SizedBox(
+        width: width,
+        height: height ?? 36.h,
+        child: TextButton(
+            onPressed: onPressed,
+            style: ButtonStyle(
+              padding: WidgetStatePropertyAll(padding ?? EdgeInsets.zero),
+              backgroundColor:
+                  WidgetStatePropertyAll(backgroundColor ?? AppColors.white),
+              shape: WidgetStatePropertyAll(
+                RoundedRectangleBorder(
+                  borderRadius: borderRadius ?? BorderRadius.circular(25.r),
+                  side: border ?? BorderSide.none,
                 ),
-          )),
+              ),
+            ),
+            child: Align(
+              alignment: alignment,
+              child: btnChild ??
+                  Text(
+                    btnLabel ?? "",
+                    style: btnLabelStyle ??
+                        AppTextStyles.getStyle(
+                          colorVariant: ColorVariant.black,
+                          sizeVariant: SizeVariant.medium,
+                          fontWeightVariant: FontWeightVariant.bold,
+                        ),
+                  ),
+            )),
+      ),
     );
   }
 }

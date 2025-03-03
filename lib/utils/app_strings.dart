@@ -2,6 +2,8 @@ class AppStrings {
   // Common
   static const String add = "Add";
   static const String next = "Next";
+  static const String history = "History";
+
 
   // Email validation
   static const String emailPattern =

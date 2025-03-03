@@ -99,6 +99,7 @@ class AmountCardWidget extends StatelessWidget {
                       homeBloc.add(AddNewTotalBalanceEvent());
                       GoRouter.of(context).pop();
                     },
+                    width: MediaQuery.of(context).size.width,
                     btnLabel: AppStrings.add,
                   ),
                   CommonSizedBoxWidget.height(16.h),

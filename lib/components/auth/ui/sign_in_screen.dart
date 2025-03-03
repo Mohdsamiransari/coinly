@@ -191,6 +191,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 GoRouter.of(context).goNamed(RouterConstant.dashboardScreen);
               // }
             },
+            width: MediaQuery.of(context).size.width,
             btnLabel: AppStrings.signIn,
           ),
         ],
