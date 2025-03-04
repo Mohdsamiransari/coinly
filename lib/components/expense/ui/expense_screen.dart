@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:coinly/components/common/common_button_widget.dart';
 import 'package:coinly/components/common/common_input_widget.dart';
 import 'package:coinly/components/common/common_sized_box_widget.dart';
@@ -8,6 +10,7 @@ import 'package:coinly/utils/app_strings.dart';
 import 'package:coinly/utils/app_styles.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_xlider/flutter_xlider.dart';
 
 class ExpenseScreen extends StatefulWidget {
   const ExpenseScreen({super.key});
@@ -90,7 +93,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                     showDragHandle: true,
                     context: context,
                     builder: (context) {
-                      double currentValue = 50000;
+                      double currentValue = 1000;
 
                       return Container(
                         width: double.infinity,
@@ -168,60 +171,69 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                                 fontWeightVariant: FontWeightVariant.medium,
                               ),
                             ),
-                            Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                SliderTheme(
-                                  data: SliderTheme.of(context).copyWith(
-                                    activeTrackColor: AppColors.secondaryBlue,
-                                    inactiveTrackColor: AppColors.white,
-                                    thumbColor: AppColors.secondaryBlue,
-                                    trackHeight: 3,
-                                    thumbShape: const RoundSliderThumbShape(
-                                        enabledThumbRadius: 10),
-                                  ),
-                                  child: Slider(
-                                    value: currentValue,
-                                    min: 0,
-                                    max: 50000,
-                                    onChanged: (value) {
-                                      setState(() {
-                                        currentValue = value;
-                                      });
-                                    },
-                                  ),
+                            FlutterSlider(
+                              values: const [300],
+                              max: 20000,
+                              min: 0,
+                              trackBar: FlutterSliderTrackBar(
+                                inactiveTrackBar: BoxDecoration(
+                                  color: AppColors.white,
+                                  borderRadius: BorderRadius.circular(24.r),
                                 ),
-                                Positioned(
-                                  left: 10.w,
-                                  top: 25.h,
-                                  child: Text(
-                                    "0",
-                                    style: TextStyle(
-                                        fontSize: 14.sp,
-                                        color: Colors.grey[400]),
-                                  ),
+                                activeTrackBar: BoxDecoration(
+                                  color: AppColors.secondaryBlue,
+                                  borderRadius: BorderRadius.circular(24.r),
                                 ),
-                                Positioned(
-                                  top: 25.h,
-                                  child: Text(
-                                    "${currentValue.floor()}", // Convert to K format
-                                    style: TextStyle(
-                                        fontSize: 16.sp,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold),
+                              ),
+                              handler: FlutterSliderHandler(
+                                  decoration: const BoxDecoration(
+                                    color: AppColors.secondaryBlue,
+                                    shape: BoxShape.circle,
                                   ),
-                                ),
-                                Positioned(
-                                  right: 10.w,
-                                  top: 25.h,
-                                  child: Text(
-                                    "1L",
-                                    style: TextStyle(
-                                        fontSize: 14.sp,
-                                        color: Colors.grey[400]),
+                                  child: const SizedBox.shrink()),
+                              onDragging:
+                                  (handlerIndex, lowerValue, upperValue) {
+                                log("Lower Value: $lowerValue");
+                                setState(() {});
+                              },
+                            ),
+                            Padding(
+                              padding: EdgeInsets.only(right: 16.w),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  CommonButtonWidget(
+                                    width:
+                                        MediaQuery.of(context).size.width / 2.3,
+                                    height: 40.h,
+                                    btnLabel: "Cancel",
+                                    btnLabelStyle: AppTextStyles.getStyle(
+                                      colorVariant: ColorVariant.secondary,
+                                      sizeVariant: SizeVariant.medium,
+                                      fontWeightVariant: FontWeightVariant.bold,
+                                    ),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 24.w, vertical: 12.h),
+                                    backgroundColor: AppColors.white,
                                   ),
-                                )
-                              ],
+                                  CommonButtonWidget(
+                                    width:
+                                        MediaQuery.of(context).size.width / 2.3,
+                                    height: 40.h,
+                                    btnLabel: "Apply",
+                                    btnLabelStyle: AppTextStyles.getStyle(
+                                      colorVariant: ColorVariant.white,
+                                      sizeVariant: SizeVariant.medium,
+                                      fontWeightVariant: FontWeightVariant.bold,
+                                    ),
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: 24.w, vertical: 12.h),
+                                    backgroundColor: AppColors.secondaryBlue,
+                                  ),
+                                ],
+                              ),
                             ),
                             CommonSizedBoxWidget.height(24.w),
                           ],
