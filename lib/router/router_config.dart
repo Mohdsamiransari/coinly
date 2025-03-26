@@ -3,6 +3,7 @@ import 'package:coinly/components/auth/ui/sign_up_screen.dart';
 import 'package:coinly/components/auth/ui/splash_screen.dart';
 import 'package:coinly/components/dashboard/ui/dashboard_screen.dart';
 import 'package:coinly/components/expense/ui/debit_credit_expense_screen.dart';
+import 'package:coinly/components/expense/ui/expense_detail_screen.dart';
 import 'package:coinly/components/friends/ui/friends_profile_screen.dart';
 import 'package:coinly/components/friends/ui/search_friends_screen.dart';
 import 'package:coinly/components/qr/ui/qr_code_scanner_screen.dart';
@@ -96,6 +97,14 @@ class AppRouterConfig {
       pageBuilder: (context, state) {
         return const MaterialPage(child: SearchFriendsScreen());
       },
+    ),
+
+    // Expense
+    GoRoute(
+      path: "/expenseDetailScreen",
+      name: RouterConstant.expenseDetailScreen,
+      pageBuilder: (context, state) =>
+          const MaterialPage(child: ExpenseDetailScreen()),
     ),
   ]);
 }

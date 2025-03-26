@@ -36,7 +36,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
     _controllers = List.generate(6, (index) {
       return AnimationController(
         vsync: this,
-        duration: const Duration(milliseconds: 500),
+        duration: const Duration(milliseconds: 300),
       );
     });
 

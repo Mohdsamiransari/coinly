@@ -87,7 +87,7 @@ class _FriendsScreenState extends State<FriendsScreen>
       },
     ]);
     _animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 1200));
+        vsync: this, duration: const Duration(milliseconds: 900));
 
     /// **Connections Animation (Slide from Right to Left)**
     _connectionSlideAnimations = List.generate(

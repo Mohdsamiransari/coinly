@@ -4,6 +4,7 @@ import 'package:coinly/components/common/common_button_widget.dart';
 import 'package:coinly/components/common/common_input_widget.dart';
 import 'package:coinly/components/common/common_sized_box_widget.dart';
 import 'package:coinly/components/common/image_preview.dart';
+import 'package:coinly/components/expense/ui/widgets/expense_card_widget.dart';
 import 'package:coinly/utils/app_assets.dart';
 import 'package:coinly/utils/app_colors.dart';
 import 'package:coinly/utils/app_strings.dart';
@@ -85,16 +86,14 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
               ),
               CommonSizedBoxWidget.width(8.h),
               CommonButtonWidget(
-                width: 45,
-                height: 45,
+                width: 42.r,
+                height: 42.r,
                 onPressed: () {
                   showModalBottomSheet(
                     backgroundColor: AppColors.primaryWhite,
                     showDragHandle: true,
                     context: context,
                     builder: (context) {
-                      double currentValue = 1000;
-
                       return Container(
                         width: double.infinity,
                         padding: EdgeInsets.only(
@@ -242,14 +241,32 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                     },
                   );
                 },
-                btnChild: const Icon(
+                btnChild:  Icon(
                   Icons.filter_alt_outlined,
                   color: AppColors.white,
+                  size: 24.r,
                 ),
                 borderRadius: BorderRadius.circular(8.r),
                 backgroundColor: AppColors.secondaryBlue,
               )
             ],
+          ),
+          CommonSizedBoxWidget.height(16.h),
+          Expanded(
+            child: ListView.separated(
+              itemBuilder: (context, index) {
+                return Column(
+                  children: [
+                    const ExpenseCardWidget(),
+                    if (index == 13)
+                      CommonSizedBoxWidget.height(40.h), // Only for last item
+                  ],
+                );
+              },
+              separatorBuilder: (context, index) =>
+                  CommonSizedBoxWidget.height(16.h),
+              itemCount: 14,
+            ),
           ),
         ],
       ),

@@ -88,6 +88,7 @@ class _CommonInputWidgetState extends State<CommonInputWidget> {
       onTapOutside: (event) {
         FocusManager.instance.primaryFocus?.unfocus();
       },
+
       readOnly: widget.readOnly ?? false,
       initialValue: widget.initialValue,
       onChanged: widget.onChanged,
@@ -118,7 +119,7 @@ class _CommonInputWidgetState extends State<CommonInputWidget> {
             ),
         prefixIcon: widget.prefixIcon,
         prefixIconConstraints: BoxConstraints(
-          maxWidth: 34.r,
+          maxWidth: 45.r,
           maxHeight: 20.r,
         ),
         prefixText: widget.prefixText,
