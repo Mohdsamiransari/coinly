@@ -1,7 +1,7 @@
-import 'package:coinly/components/auth/bloc/auth_bloc.dart';
-import 'package:coinly/components/home/bloc/home_bloc.dart';
-import 'package:coinly/router/router_config.dart';
-import 'package:coinly/utils/app_colors.dart';
+import 'package:coinly/core/helper/bloc_providers.dart';
+
+import 'package:coinly/core/router/router_config.dart';
+import 'package:coinly/core/utils/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -20,14 +20,7 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       child: MultiBlocProvider(
-        providers: [
-          BlocProvider(
-            create: (context) => AuthBloc(),
-          ),
-          BlocProvider(
-            create: (context) => HomeBloc(),
-          )
-        ],
+        providers: blocProviders,
         child: MaterialApp.router(
           debugShowCheckedModeBanner: false,
           title: 'Coinly',
