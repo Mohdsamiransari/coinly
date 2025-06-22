@@ -13,98 +13,101 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class AppRouterConfig {
-  static final GoRouter router = GoRouter(routes: [
-    // Auth
-    GoRoute(
-      path: "/",
-      name: RouterConstant.splashScreen,
-      pageBuilder: (context, state) {
-        return const MaterialPage(child: SplashScreen());
-      },
-    ),
-    GoRoute(
-      path: "/signInScreen",
-      name: RouterConstant.signInScreen,
-      pageBuilder: (context, state) {
-        return const MaterialPage(child: SignInScreen());
-      },
-    ),
-    GoRoute(
-      path: "/signUpScreen",
-      name: RouterConstant.signUpScreen,
-      pageBuilder: (context, state) {
-        return const MaterialPage(child: SignUpScreen());
-      },
-    ),
+  static final GoRouter router = GoRouter(
+    initialLocation: "/",
+    routes: [
+      // Auth
+      GoRoute(
+        path: "/",
+        name: RouterConstant.splashScreen,
+        pageBuilder: (context, state) {
+          return const MaterialPage(child: SplashScreen());
+        },
+      ),
+      GoRoute(
+        path: "/signInScreen",
+        name: RouterConstant.signInScreen,
+        pageBuilder: (context, state) {
+          return const MaterialPage(child: SignInScreen());
+        },
+      ),
+      GoRoute(
+        path: "/signUpScreen",
+        name: RouterConstant.signUpScreen,
+        pageBuilder: (context, state) {
+          return const MaterialPage(child: SignUpScreen());
+        },
+      ),
 
-    // Dashboard
-    GoRoute(
-      path: "/dashboardScreen",
-      name: RouterConstant.dashboardScreen,
-      pageBuilder: (context, state) {
-        return const MaterialPage(child: DashboardScreen());
-      },
-    ),
+      // Dashboard
+      GoRoute(
+        path: "/dashboardScreen",
+        name: RouterConstant.dashboardScreen,
+        pageBuilder: (context, state) {
+          return const MaterialPage(child: DashboardScreen());
+        },
+      ),
 
-    // Debit Credit
+      // Debit Credit
 
-    GoRoute(
-      path: "/debitCreditExpenseScreen",
-      name: RouterConstant.debitCreditExpenseScreen,
-      pageBuilder: (context, state) {
-        final data = state.extra as Map<String, dynamic>;
-        return MaterialPage(
-            child: DebitCreditExpenseScreen(
-          isDebitScreen: data["isDebitScreen"],
-        ));
-      },
-    ),
+      GoRoute(
+        path: "/debitCreditExpenseScreen",
+        name: RouterConstant.debitCreditExpenseScreen,
+        pageBuilder: (context, state) {
+          final data = state.extra as Map<String, dynamic>;
+          return MaterialPage(
+              child: DebitCreditExpenseScreen(
+            isDebitScreen: data["isDebitScreen"],
+          ));
+        },
+      ),
 
-    // QR Code
-    GoRoute(
-      path: "/userQrCodeScreen",
-      name: RouterConstant.userQrCodeScreen,
-      pageBuilder: (context, state) {
-        return const MaterialPage(child: UserQrCodeScreen());
-      },
-    ),
-    GoRoute(
-      path: "/qrCodeScannerScreen",
-      name: RouterConstant.qrCodeScannerScreen,
-      pageBuilder: (context, state) {
-        return const MaterialPage(child: QrCodeScannerScreen());
-      },
-    ),
+      // QR Code
+      GoRoute(
+        path: "/userQrCodeScreen",
+        name: RouterConstant.userQrCodeScreen,
+        pageBuilder: (context, state) {
+          return const MaterialPage(child: UserQrCodeScreen());
+        },
+      ),
+      GoRoute(
+        path: "/qrCodeScannerScreen",
+        name: RouterConstant.qrCodeScannerScreen,
+        pageBuilder: (context, state) {
+          return const MaterialPage(child: QrCodeScannerScreen());
+        },
+      ),
 
-    // Friends
-    GoRoute(
-      path: "/friendsProfileScreen",
-      name: RouterConstant.friendsProfileScreen,
-      pageBuilder: (context, state) {
-        final data = state.extra as Map<String, dynamic>;
+      // Friends
+      GoRoute(
+        path: "/friendsProfileScreen",
+        name: RouterConstant.friendsProfileScreen,
+        pageBuilder: (context, state) {
+          final data = state.extra as Map<String, dynamic>;
 
-        return MaterialPage(
-            child: FriendsProfileScreen(
-          friendEmail: data["friendEmail"],
-          friendName: data["friendName"],
-          friendProfileImage: data["friendProfileImage"],
-        ));
-      },
-    ),
-    GoRoute(
-      path: "/searchFriendsScreen",
-      name: RouterConstant.searchFriendsScreen,
-      pageBuilder: (context, state) {
-        return const MaterialPage(child: SearchFriendsScreen());
-      },
-    ),
+          return MaterialPage(
+              child: FriendsProfileScreen(
+            friendEmail: data["friendEmail"],
+            friendName: data["friendName"],
+            friendProfileImage: data["friendProfileImage"],
+          ));
+        },
+      ),
+      GoRoute(
+        path: "/searchFriendsScreen",
+        name: RouterConstant.searchFriendsScreen,
+        pageBuilder: (context, state) {
+          return const MaterialPage(child: SearchFriendsScreen());
+        },
+      ),
 
-    // Expense
-    GoRoute(
-      path: "/expenseDetailScreen",
-      name: RouterConstant.expenseDetailScreen,
-      pageBuilder: (context, state) =>
-          const MaterialPage(child: ExpenseDetailScreen()),
-    ),
-  ]);
+      // Expense
+      GoRoute(
+        path: "/expenseDetailScreen",
+        name: RouterConstant.expenseDetailScreen,
+        pageBuilder: (context, state) =>
+            const MaterialPage(child: ExpenseDetailScreen()),
+      ),
+    ],
+  );
 }

@@ -56,7 +56,20 @@ class _SignUpScreenState extends State<SignUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocBuilder<AuthBloc, AuthState>(
+      body: BlocConsumer<AuthBloc, AuthState>(
+        bloc: _authBloc,
+        listener: (context, state) {
+          if (state.register.isSuccess) {
+              GoRouter.of(context).goNamed(RouterConstant.dashboardScreen);
+            }
+            if (state.register.isError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.register.error ?? ""),
+                ),
+              );
+            }
+        },
         builder: (context, state) {
           return Padding(
             padding: EdgeInsets.all(20.r),
@@ -226,7 +239,8 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
   void _handleSignUp() {
     if (_formKey.currentState?.validate() ?? false) {
-      GoRouter.of(context).goNamed(RouterConstant.dashboardScreen);
+      _authBloc.add(AuthRegisterEvent());
+      // GoRouter.of(context).goNamed(RouterConstant.dashboardScreen);
     }
   }
 

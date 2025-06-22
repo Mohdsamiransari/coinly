@@ -6,7 +6,7 @@ import 'package:provider/single_child_widget.dart';
 
 List<SingleChildWidget> blocProviders = [
   BlocProvider(
-    create: (context) => AuthBloc(),
+    create: (context) => AuthBloc()..add(AuthCheckLoggedIn()),
   ),
   BlocProvider(
     create: (context) => HomeBloc(),

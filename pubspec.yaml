@@ -50,6 +50,7 @@ dependencies:
   qr_code_scanner_plus: ^2.0.10+1
   flutter_xlider: ^3.5.0
   equatable: ^2.0.7
+  shared_preferences: ^2.5.3
 
 dev_dependencies:
   flutter_test:

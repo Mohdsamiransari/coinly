@@ -12,3 +12,9 @@ final class HandleObscureTextChangeEvent extends AuthEvent {}
 
 /// Event triggered when password input changes.
 final class PasswordInputEvent extends AuthEvent {}
+
+final class AuthLoginEvent extends AuthEvent {}
+
+final class AuthCheckLoggedIn extends AuthEvent {}
+
+final class AuthRegisterEvent extends AuthEvent {}

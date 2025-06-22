@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:coinly/features/auth/bloc/auth_bloc.dart';
 import 'package:coinly/features/auth/presentation/widgets/or_divider_widget.dart';
 import 'package:coinly/features/auth/presentation/widgets/social_login_widget.dart';
@@ -60,7 +62,20 @@ class _SignInScreenState extends State<SignInScreen> {
     return GestureDetector(
       onTap: _unfocusNodes,
       child: Scaffold(
-        body: BlocBuilder<AuthBloc, AuthState>(
+        body: BlocConsumer<AuthBloc, AuthState>(
+          bloc: _authBloc,
+          listener: (context, state) {
+            if (state.isLoggingIn.isSuccess) {
+              GoRouter.of(context).goNamed(RouterConstant.dashboardScreen);
+            }
+            if (state.isLoggingIn.isError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(
+                  content: Text(state.isLoggingIn.error ?? ""),
+                ),
+              );
+            }
+          },
           builder: (context, state) {
             return Padding(
               padding: EdgeInsets.all(20.r),
@@ -199,7 +214,7 @@ class _SignInScreenState extends State<SignInScreen> {
   void _handleSignIn() {
     if (_formKey.currentState?.validate() ?? false) {
       _unfocusNodes();
-      GoRouter.of(context).goNamed(RouterConstant.dashboardScreen);
+      _authBloc.add(AuthLoginEvent());
     }
   }
 

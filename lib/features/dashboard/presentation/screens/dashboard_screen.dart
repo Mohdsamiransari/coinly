@@ -41,7 +41,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
         child: Stack(
           children: [
             renderScreen(_currentIndex),
-            if (!isKeyboardOpen)
+            // if (!isKeyboardOpen)
               Align(
                 alignment: AlignmentDirectional.bottomCenter,
                 child: Container(
