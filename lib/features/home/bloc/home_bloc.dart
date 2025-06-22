@@ -3,6 +3,8 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:coinly/core/common/model/request_status.dart';
+import 'package:coinly/features/home/data/model/amount_card.model.dart';
+import 'package:coinly/features/home/data/repositories/home_repository.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
@@ -30,23 +32,23 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   ) async {
     try {
       emit(state.copyWith(amountCardData: const RequestStatus.loading()));
-      await Future.delayed(const Duration(seconds: 2));
 
-      const responseStatus = 200;
+      final amountResponse = await HomeRepository().amountData();
 
-      if (responseStatus == 400) {
+      if (amountResponse?.status != "success") {
         emit(state.copyWith(
-            amountCardData: const RequestStatus.error("Failed to load data")));
-        return;
+            amountCardData:
+                RequestStatus.error(amountResponse?.message ?? "")));
       }
 
-      if (responseStatus == 401) {
-        emit(state.copyWith(amountCardData: const RequestStatus.empty()));
-        return;
+      if (amountResponse?.data == null) {
+        emit(state.copyWith(
+          amountCardData: const RequestStatus.empty(),
+        ));
       }
 
       emit(state.copyWith(
-        amountCardData: RequestStatus.success(data:amountCardData),
+        amountCardData: RequestStatus.success(data: amountResponse?.data),
       ));
     } catch (e) {
       log("Error getting total balance: $e");
@@ -68,18 +70,18 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         // return;
       }
 
-      final totalAccountBalance =
-          state.amountCardData.data?["totalBalance"] + (newAmount ?? 0);
+      // final totalAccountBalance =
+      //     state.amountCardData.data?["totalBalance"] + (newAmount ?? 0);
 
-      amountController.clear();
+      // amountController.clear();
 
-      emit(state.copyWith(
-        amountCardData: RequestStatus.success(data:{
-          "totalBalance": totalAccountBalance,
-          "totalCredit": state.amountCardData.data?["totalCredit"],
-          "totalDebit": state.amountCardData.data?["totalDebit"],
-        }),
-      ));
+      // emit(state.copyWith(
+      //   amountCardData: RequestStatus.success(data: {
+      //     "totalBalance": totalAccountBalance,
+      //     "totalCredit": state.amountCardData.data?["totalCredit"],
+      //     "totalDebit": state.amountCardData.data?["totalDebit"],
+      //   }),
+      // ));
     } catch (e) {
       log("Error adding new balance: $e");
       emit(state.copyWith(

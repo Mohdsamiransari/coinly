@@ -4,6 +4,7 @@ import 'package:coinly/core/network/api_endpoints.dart';
 import 'package:coinly/core/network/api_result.model.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/dio.dart' as dio_api;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class NetworkService<T> {
   final Dio _dio;
@@ -43,7 +44,7 @@ class NetworkService<T> {
     try {
       var response = await _dio.get(url,
           queryParameters: queryParameters,
-          options: _withAuthHeader(withAuth: withAuth));
+          options: await _withAuthHeader(withAuth: withAuth));
 
       final parsedData = parse(response.data);
       return handleStatusCode(response: response, parsedData: parsedData);
@@ -60,7 +61,7 @@ class NetworkService<T> {
   }) async {
     try {
       var response = await _dio.post(url,
-          data: data, options: _withAuthHeader(withAuth: withAuth));
+          data: data, options: await _withAuthHeader(withAuth: withAuth));
       final parsedData = parse(response.data);
 
       return handleStatusCode(response: response, parsedData: parsedData);
@@ -77,7 +78,7 @@ class NetworkService<T> {
   }) async {
     try {
       dio_api.Response response = await _dio.put(url,
-          data: data, options: _withAuthHeader(withAuth: withAuth));
+          data: data, options: await _withAuthHeader(withAuth: withAuth));
       final parsedData = parse(response.data);
       return handleStatusCode(response: response, parsedData: parsedData);
     } on DioException catch (e) {
@@ -93,7 +94,7 @@ class NetworkService<T> {
   }) async {
     try {
       var response = await _dio.delete(url,
-          data: data, options: _withAuthHeader(withAuth: withAuth));
+          data: data, options: await _withAuthHeader(withAuth: withAuth));
       final parsedData = parse(response.data);
 
       return handleStatusCode(response: response, parsedData: parsedData);
@@ -133,15 +134,18 @@ class NetworkService<T> {
     }
   }
 
-  String _getAuthToken() {
+  Future<String> _getAuthToken() async {
     // Fetch token from secure storage or any global source.
-    return "Bearer your_token_here";
+    final preference = await SharedPreferences.getInstance();
+    final token = preference.getString("token");
+
+    return "Bearer $token";
   }
 
-  Options _withAuthHeader({bool withAuth = true}) {
+  Future<Options> _withAuthHeader({bool withAuth = true}) async {
     final header = {
       'Content-Type': 'application/json',
-      if (withAuth) 'Authorization': _getAuthToken(),
+      if (withAuth) 'Authorization': await _getAuthToken(),
     };
     return Options(
       headers: header,

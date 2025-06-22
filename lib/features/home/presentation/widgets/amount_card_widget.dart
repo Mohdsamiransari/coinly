@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:coinly/core/common/common_bottomsheet_widget.dart';
 import 'package:coinly/core/common/common_button_widget.dart';
 import 'package:coinly/core/common/common_input_widget.dart';
@@ -12,6 +10,7 @@ import 'package:coinly/core/utils/app_assets.dart';
 import 'package:coinly/core/utils/app_colors.dart';
 import 'package:coinly/core/utils/app_strings.dart';
 import 'package:coinly/core/utils/app_styles.dart';
+import 'package:coinly/features/home/data/model/amount_card.model.dart';
 import 'package:coinly/features/home/presentation/shimmer/amount_card_shimmer.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -45,7 +44,7 @@ class AmountCardWidget extends StatelessWidget {
   }
 
   Widget _buildAmountCard(
-      BuildContext context, RequestStatus<Map<String, dynamic>> state) {
+      BuildContext context, RequestStatus<Data> state) {
     return InkWell(
       onTap: () => commonBottomSheetWidget(
         context: context,
@@ -109,7 +108,7 @@ class AmountCardWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildTopContainer(RequestStatus<Map<String, dynamic>> state) {
+  Widget _buildTopContainer(RequestStatus<Data> state) {
     return Container(
       width: double.infinity,
       height: 100.h,
@@ -144,7 +143,7 @@ class AmountCardWidget extends StatelessWidget {
             ),
             CommonSizedBoxWidget.height(8.h),
             Text(
-              "\$${state.data?["totalBalance"]}",
+              "\$${state.data?.totalBalance ?? 0}",
               style: AppTextStyles.getStyle(
                 colorVariant: ColorVariant.white,
                 sizeVariant: SizeVariant.extraLarge,
@@ -157,7 +156,7 @@ class AmountCardWidget extends StatelessWidget {
     );
   }
 
-  Widget _buildBottomContainer(RequestStatus<Map<String, dynamic>> state) {
+  Widget _buildBottomContainer(RequestStatus<Data> state) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.all(20.r),
@@ -169,9 +168,9 @@ class AmountCardWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           _buildInfoColumn(
-              AppStrings.totalDebit, "-\$${state.data?["totalDebit"]}"),
+              AppStrings.totalDebit, "-\$${state.data?.totalDebit ?? 0}"),
           _buildInfoColumn(
-              AppStrings.totalCredit, "+\$${state.data?["totalCredit"]}"),
+              AppStrings.totalCredit, "+\$${state.data?.totalCredit ?? 0}"),
         ],
       ),
     );

@@ -152,13 +152,13 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                         // Credit Debit Scan
                         _buildAnimatedWidget(
                             child: const CreditDebitScanWidget(), index: 3),
-                        
+
                         CommonSizedBoxWidget.height(16.h),
                         // AI Assistant
-                        _buildAnimatedWidget(
-                            child: const AiAssistantWidget(), index: 4),
-                       
-                       CommonSizedBoxWidget.height(16.h),
+                        //   _buildAnimatedWidget(
+                        //       child: const AiAssistantWidget(), index: 4),
+
+                        //  CommonSizedBoxWidget.height(16.h),
                         // Recent Transaction
                         // _buildAnimatedWidget(
                         //     child: const RecentTransactionWidget(), index: 5),
@@ -167,7 +167,6 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
                     ),
                   ),
                 ),
-             
               ],
             ),
           );
