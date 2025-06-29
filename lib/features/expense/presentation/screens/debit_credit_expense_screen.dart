@@ -5,7 +5,6 @@ import 'package:coinly/core/common/common_input_widget.dart';
 import 'package:coinly/core/common/common_sized_box_widget.dart';
 import 'package:coinly/core/common/model/request_status.dart';
 import 'package:coinly/features/expense/bloc/expense_bloc.dart';
-import 'package:coinly/features/expense/data/model/transaction_model.dart';
 import 'package:coinly/features/expense/presentation/widgets/expense_category_widget.dart';
 import 'package:coinly/core/utils/app_strings.dart';
 import 'package:coinly/core/utils/app_styles.dart';
@@ -67,14 +66,7 @@ class _DebitExpenseScreenState extends State<DebitCreditExpenseScreen>
   void _validateAndSubmit(RequestStatus<String> selectedCategoryState) {
     if (_formKey.currentState!.validate() &&
         selectedCategoryState.data != null) {
-      context.read<ExpenseBloc>().add(AddTransactionEvent(const Transaction(
-            title: "abcd",
-            date: "10 September",
-            time: "9:00",
-            amount: 20,
-            expenseType: "electricity",
-            iconUrl: "assets/images/expenseicon1.png",
-          )));
+     
     } else if (selectedCategoryState.data == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Please select an expense category.")),

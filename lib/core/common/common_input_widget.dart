@@ -100,7 +100,7 @@ class _CommonInputWidgetState extends State<CommonInputWidget> {
       keyboardType: widget.textInputType,
       style: widget.textStyle ??
           AppTextStyles.getStyle(
-            colorVariant: ColorVariant.white,
+            colorVariant: ColorVariant.black,
             sizeVariant: SizeVariant.medium,
             fontWeightVariant: FontWeightVariant.medium,
           ),

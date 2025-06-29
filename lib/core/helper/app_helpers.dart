@@ -1,3 +1,4 @@
+import 'package:coinly/core/common/model/date_time_model.dart';
 import 'package:coinly/core/utils/app_styles.dart';
 import 'package:flutter/material.dart';
 
@@ -61,5 +62,20 @@ class AppHelpers {
           ),
       ],
     );
+  }
+
+  static DateTimeModel dateTimeFunction(String input) {
+    final dateTime = DateTime.parse(input);
+    // Format date as YYYY-MM-DD
+    final date = "${dateTime.year.toString().padLeft(4, '0')}-"
+        "${dateTime.month.toString().padLeft(2, '0')}-"
+        "${dateTime.day.toString().padLeft(2, '0')}";
+
+    // Format time as HH:MM:SS
+    final time = "${dateTime.hour.toString().padLeft(2, '0')}:"
+        "${dateTime.minute.toString().padLeft(2, '0')}:"
+        "${dateTime.second.toString().padLeft(2, '0')}";
+
+    return DateTimeModel(date: date,time: time);
   }
 }

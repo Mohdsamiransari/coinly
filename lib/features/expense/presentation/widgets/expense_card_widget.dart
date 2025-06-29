@@ -1,18 +1,25 @@
 import 'package:coinly/core/common/common_sized_box_widget.dart';
 import 'package:coinly/core/common/image_preview.dart';
 import 'package:coinly/core/common/stacked_avatar_widget.dart';
+import 'package:coinly/core/helper/app_helpers.dart';
 import 'package:coinly/core/router/router_constant.dart';
 import 'package:coinly/core/utils/app_colors.dart';
 import 'package:coinly/core/utils/app_styles.dart';
+import 'package:coinly/features/expense/data/model/expense_model.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 class ExpenseCardWidget extends StatelessWidget {
-  const ExpenseCardWidget({super.key});
+  final Data transaction;
+  final bool? isStackedAvatar;
+  const ExpenseCardWidget(
+      {super.key, required this.transaction, this.isStackedAvatar = false});
 
   @override
   Widget build(BuildContext context) {
+    final result = AppHelpers.dateTimeFunction(transaction.expenseDate ?? "");
+    final amountType = transaction.expenseType == "debit" ? "-" : "+";
     return ListTile(
       onTap: () {
         GoRouter.of(context).pushNamed(RouterConstant.expenseDetailScreen);
@@ -32,7 +39,7 @@ class ExpenseCardWidget extends StatelessWidget {
         children: [
           Flexible(
             child: Text(
-              "Electricity Bill",
+              transaction.expenseName ?? "",
               style: AppTextStyles.getStyle(
                 colorVariant: ColorVariant.white,
                 sizeVariant: SizeVariant.medium,
@@ -43,12 +50,14 @@ class ExpenseCardWidget extends StatelessWidget {
               softWrap: false,
             ),
           ),
-          CommonSizedBoxWidget.width(8.w),
-          const StackedAvatarWidget()
+          if (isStackedAvatar == true) ...[
+            CommonSizedBoxWidget.width(8.w),
+            const StackedAvatarWidget()
+          ]
         ],
       ),
       subtitle: Text(
-        "4 September - 8:30 pm",
+        "${result.date} - ${result.time}",
         style: AppTextStyles.getStyle(
           colorVariant: ColorVariant.primaryWhite,
           sizeVariant: SizeVariant.small,
@@ -56,7 +65,7 @@ class ExpenseCardWidget extends StatelessWidget {
         ),
       ),
       trailing: Text(
-        "-\$150",
+        "$amountType\$${transaction.expenseAmount?.toStringAsFixed(2)}",
         style: AppTextStyles.getStyle(
           colorVariant: ColorVariant.white,
           sizeVariant: SizeVariant.mediumLarge,

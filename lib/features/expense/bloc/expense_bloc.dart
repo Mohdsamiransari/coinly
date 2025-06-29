@@ -3,48 +3,25 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:coinly/core/common/model/request_status.dart';
-import 'package:coinly/features/expense/data/model/transaction_model.dart';
+import 'package:coinly/features/expense/data/model/expense_model.dart';
+import 'package:coinly/features/expense/data/repositories/expense_repository.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/rendering.dart';
 import 'package:meta/meta.dart';
+import 'package:rxdart/rxdart.dart';
 
 part 'expense_event.dart';
 part 'expense_state.dart';
 
 class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
-  // In-memory storage for transactions
-  final List<Transaction> _transactions = [
-    const Transaction(
-      title: "Electricity Bill",
-      date: "4 September",
-      time: "8:30 pm",
-      amount: 150,
-      expenseType: "electricity",
-      iconUrl: "assets/images/expenseicon1.png",
-    ),
-    const Transaction(
-      title: "Groceries",
-      date: "4 September",
-      time: "9:00 pm",
-      amount: 50,
-      expenseType: "grocery",
-      iconUrl: "assets/images/expenseicon2.png",
-    ),
-    const Transaction(
-      title: "Dinner",
-      date: "5 September",
-      time: "8:00 pm",
-      amount: 100,
-      expenseType: "food",
-      iconUrl: "assets/images/expenseicon3.png",
-    ),
-  ];
-
   ExpenseBloc() : super(const ExpenseState()) {
     on<GetRecentTransactionsEvent>(_getRecentTransactionsEvent);
     on<AddTransactionEvent>(_addTransactionEvent);
     on<GetExpenseCategoryEvent>(_getExpenseCategoryEvent);
     on<SelectExpenseCategoryEvent>(_selectExpenseCategoryEvent);
+    on<FilterExpenseDataEvent>(
+      _filterExpenseDataEvent,
+      transformer: (events, mapper) => events.debounceTime(const Duration(milliseconds: 500)).asyncExpand(mapper),
+    );
   }
 
   FutureOr<void> _getRecentTransactionsEvent(
@@ -55,19 +32,22 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
       emit(state.copyWith(
         transactions: const RequestStatus.loading(),
       ));
-      // await Future.delayed(const Duration(seconds: 2));
 
-      if (_transactions.isEmpty) {
+      final expenseData = await ExpenseRepository().expenses();
+
+      if (expenseData == null &&
+          expenseData?.data == null &&
+          expenseData!.data!.isEmpty) {
         emit(state.copyWith(
           transactions: const RequestStatus.empty(),
         ));
         return;
       }
 
-      log("Recent Transaction $_transactions");
+      log("Recent Transaction $expenseData");
 
       emit(state.copyWith(
-        transactions: RequestStatus.success(data: _transactions),
+        transactions: RequestStatus.success(data: expenseData),
       ));
     } catch (e) {
       log("Error getting recent transactions: $e");
@@ -86,7 +66,7 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
         addTransaction: const RequestStatus.loading(),
       ));
       await Future.delayed(const Duration(seconds: 1));
-      state.transactions.data?.add(event.transaction);
+      // state.transactions.data?.add(event.transaction);
 
       emit(state.copyWith(
         addTransaction: const RequestStatus.success(),
@@ -141,6 +121,32 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
         selectedExpenseCategory:
             const RequestStatus.error("Failed to select category"),
       ));
+    }
+  }
+
+  FutureOr<void> _filterExpenseDataEvent(
+      FilterExpenseDataEvent event, Emitter<ExpenseState> emit) async {
+    try {
+      // If search is empty, clear filtered state
+      if (event.searchKeyword.trim().isEmpty) {
+        emit(state.copyWith(filteredTransactions: const RequestStatus.idle()));
+        return;
+      }
+      final expenseDatas = state.transactions.data?.data ?? [];
+      final filteredExpenseData = expenseDatas
+          .where((expense) => expense.expenseName!
+              .toLowerCase()
+              .contains(event.searchKeyword.toLowerCase()))
+          .toList();
+      if (filteredExpenseData.isEmpty) {
+        emit(state.copyWith(filteredTransactions: const RequestStatus.empty()));
+        return;
+      }
+      emit(state.copyWith(
+          filteredTransactions:
+              RequestStatus.success(data: filteredExpenseData)));
+    } catch (e) {
+      emit(state.copyWith(transactions: state.transactions));
     }
   }
 }

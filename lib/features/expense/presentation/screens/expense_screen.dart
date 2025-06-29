@@ -5,11 +5,15 @@ import 'package:coinly/core/common/common_button_widget.dart';
 import 'package:coinly/core/common/common_input_widget.dart';
 import 'package:coinly/core/common/common_sized_box_widget.dart';
 import 'package:coinly/core/common/image_preview.dart';
+import 'package:coinly/core/helper/app_helpers.dart';
+import 'package:coinly/features/expense/bloc/expense_bloc.dart';
+import 'package:coinly/features/expense/presentation/shimmer/expense_card_shimmer.dart';
 import 'package:coinly/features/expense/presentation/widgets/expense_card_widget.dart';
 import 'package:coinly/core/utils/app_assets.dart';
 import 'package:coinly/core/utils/app_colors.dart';
 import 'package:coinly/core/utils/app_strings.dart';
 import 'package:coinly/core/utils/app_styles.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_xlider/flutter_xlider.dart';
@@ -23,6 +27,8 @@ class ExpenseScreen extends StatefulWidget {
 
 class _ExpenseScreenState extends State<ExpenseScreen> {
   final FocusNode searchFocusNode = FocusNode();
+  final TextEditingController _searchController = TextEditingController();
+  late final ExpenseBloc _expenseBloc;
 
   List<String> expenseType = [
     "All",
@@ -42,6 +48,13 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
     "Newest",
     "Oldest",
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    _expenseBloc = context.read<ExpenseBloc>()
+      ..add(GetRecentTransactionsEvent());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +77,10 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
             children: [
               Expanded(
                 child: CommonInputWidget(
+                  controller: _searchController,
+                  onChanged: (p0) {
+                    _expenseBloc.add(FilterExpenseDataEvent(searchKeyword: p0));
+                  },
                   borderRadius: BorderRadius.circular(24.r),
                   isFilled: true,
                   focusNode: searchFocusNode,
@@ -89,7 +106,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
               CommonButtonWidget(
                 width: 42.r,
                 height: 42.r,
-                onPressed: ()=> filterBottomSheet(),
+                onPressed: () => filterBottomSheet(),
                 btnChild: Icon(
                   Icons.filter_alt_outlined,
                   color: AppColors.white,
@@ -101,24 +118,60 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
             ],
           ),
           CommonSizedBoxWidget.height(16.h),
-          Expanded(
-            child: ListView.separated(
-              itemBuilder: (context, index) {
-                return Column(
-                  children: [
-                    const ExpenseCardWidget(),
-                    if (index == 13)
-                      CommonSizedBoxWidget.height(40.h), // Only for last item
-                  ],
-                );
-              },
-              separatorBuilder: (context, index) =>
-                  CommonSizedBoxWidget.height(16.h),
-              itemCount: 14,
-            ),
-          ),
+          _buildExpenseList(),
         ],
       ),
+    );
+  }
+
+  BlocBuilder<ExpenseBloc, ExpenseState> _buildExpenseList() {
+    return BlocBuilder<ExpenseBloc, ExpenseState>(
+      builder: (context, state) {
+        final recentTransactionState = state.transactions;
+        final filteredTransactionsState = state.filteredTransactions;
+        if (recentTransactionState.isLoading) {
+          return const ExpenseCardShimmer();
+        }
+        if (recentTransactionState.isError) {
+          return AppHelpers.buildErrorWidget(
+              recentTransactionState.error ?? "Error loading data");
+        }
+        if (recentTransactionState.isEmpty) {
+          return AppHelpers.buildEmptyWidget(
+              "No recent transactions available");
+        }
+
+        // If filter is active (success or empty), use filtered results
+        final isFiltering = filteredTransactionsState.isSuccess || filteredTransactionsState.isEmpty;
+        final transactions = isFiltering
+            ? (filteredTransactionsState.data ?? [])
+            : (recentTransactionState.data?.data ?? []);
+        final reversedTransactions = transactions.reversed.toList();
+
+        if (isFiltering && reversedTransactions.isEmpty) {
+          return AppHelpers.buildEmptyWidget("No transactions found for your search");
+        }
+
+        return Expanded(
+          child: ListView.separated(
+            itemBuilder: (context, index) {
+              final transactionData = reversedTransactions[index];
+              return Column(
+                children: [
+                  ExpenseCardWidget(
+                    transaction: transactionData,
+                  ),
+                  if (reversedTransactions.length - 1 == index)
+                    CommonSizedBoxWidget.height(40.h), // Only for last item
+                ],
+              );
+            },
+            separatorBuilder: (context, index) =>
+                CommonSizedBoxWidget.height(16.h),
+            itemCount: reversedTransactions.length,
+          ),
+        );
+      },
     );
   }
 

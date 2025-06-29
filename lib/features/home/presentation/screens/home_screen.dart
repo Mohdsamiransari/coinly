@@ -23,74 +23,67 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
-  late List<AnimationController> _controllers;
-  late List<Animation<Offset>> _slideAnimations;
-  late List<Animation<double>> _fadeAnimations;
+class _HomeScreenState extends State<HomeScreen>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+  late final List<Animation<double>> _fadeAnimations;
+  late final List<Animation<Offset>> _slideAnimations;
   final FocusNode searchFocusNode = FocusNode();
+  late final HomeBloc _homeBloc;
+
+  static const int _animatedItemCount = 5; // Number of animated widgets
 
   @override
   void initState() {
     super.initState();
-
-    context.read<HomeBloc>().add(GetTotalBalanceEvent());
-    _controllers = List.generate(6, (index) {
-      return AnimationController(
-        vsync: this,
-        duration: const Duration(milliseconds: 200),
+    _homeBloc = context.read<HomeBloc>()..add(GetTotalBalanceEvent());
+    context.read<ExpenseBloc>().add(GetRecentTransactionsEvent());
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    );
+    _fadeAnimations = List.generate(_animatedItemCount, (index) {
+      final start = index * 0.15;
+      final end = start + 0.5;
+      return CurvedAnimation(
+        parent: _controller,
+        curve: Interval(start, end > 1.0 ? 1.0 : end, curve: Curves.easeOut),
       );
     });
-
-    _slideAnimations = _controllers.map((controller) {
+    _slideAnimations = List.generate(_animatedItemCount, (index) {
+      final start = index * 0.15;
+      final end = start + 0.5;
       return Tween<Offset>(
         begin: const Offset(0, -0.3),
         end: Offset.zero,
-      ).animate(CurvedAnimation(parent: controller, curve: Curves.easeOut));
-    }).toList();
-
-    _fadeAnimations = _controllers.map((controller) {
-      return Tween<double>(begin: 0, end: 1).animate(controller);
-    }).toList();
-
-    _startAnimations();
+      ).animate(CurvedAnimation(
+        parent: _controller,
+        curve: Interval(start, end > 1.0 ? 1.0 : end, curve: Curves.easeOut),
+      ));
+    });
+    _controller.forward();
     searchFocusNode.addListener(() => setState(() {}));
-  }
-
-  void _startAnimations() async {
-    for (var controller in _controllers) {
-      await Future.delayed(const Duration(milliseconds: 200));
-      controller.forward();
-    }
   }
 
   @override
   void dispose() {
-    for (var controller in _controllers) {
-      controller.dispose();
-    }
+    _controller.dispose();
     searchFocusNode.dispose();
     super.dispose();
   }
 
   Widget _buildAnimatedWidget({required Widget child, required int index}) {
-    return AnimatedBuilder(
-      animation: _controllers[index],
-      builder: (context, child) {
-        return FadeTransition(
-          opacity: _fadeAnimations[index],
-          child: SlideTransition(
-            position: _slideAnimations[index],
-            child: child,
-          ),
-        );
-      },
-      child: child,
+    return FadeTransition(
+      opacity: _fadeAnimations[index],
+      child: SlideTransition(
+        position: _slideAnimations[index],
+        child: child,
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    final homeBloc = context.read<HomeBloc>();
     return MultiBlocListener(
       listeners: [
         BlocListener<HomeBloc, HomeState>(
@@ -104,68 +97,71 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
         builder: (context, state) {
           return Padding(
             padding: EdgeInsets.all(18.r),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // User Notification
-                _buildAnimatedWidget(
-                    child: const UserNotificationWidget(), index: 0),
-                CommonSizedBoxWidget.height(24.h),
-                // Search Bar
-                _buildAnimatedWidget(
-                  child: CommonInputWidget(
-                    borderRadius: BorderRadius.circular(24.r),
-                    isFilled: true,
-                    focusNode: searchFocusNode,
-                    fillColor: AppColors.white,
-                    prefixIcon: ImagePreview(
-                      path: AppAssets.search,
-                      width: 40.w,
-                      color: searchFocusNode.hasFocus
-                          ? AppColors.black
-                          : AppColors.primaryGrey,
-                    ),
-                    hintText: AppStrings.search,
-                    hintTextStyle: AppTextStyles.getStyle(
-                      colorVariant: searchFocusNode.hasFocus
-                          ? ColorVariant.black
-                          : ColorVariant.primaryGrey,
-                      sizeVariant: SizeVariant.medium,
-                      fontWeightVariant: FontWeightVariant.medium,
-                    ),
+            child: CustomScrollView(
+              slivers: [
+                SliverToBoxAdapter(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      _buildAnimatedWidget(
+                        child: const UserNotificationWidget(),
+                        index: 0,
+                      ),
+                      CommonSizedBoxWidget.height(24.h),
+                      _buildAnimatedWidget(
+                        child: CommonInputWidget(
+                          borderRadius: BorderRadius.circular(24.r),
+                          isFilled: true,
+                          focusNode: searchFocusNode,
+                          fillColor: AppColors.white,
+                          prefixIcon: ImagePreview(
+                            path: AppAssets.search,
+                            width: 40.w,
+                            color: searchFocusNode.hasFocus
+                                ? AppColors.black
+                                : AppColors.primaryGrey,
+                          ),
+                          hintText: AppStrings.search,
+                          hintTextStyle: AppTextStyles.getStyle(
+                            colorVariant: searchFocusNode.hasFocus
+                                ? ColorVariant.black
+                                : ColorVariant.primaryGrey,
+                            sizeVariant: SizeVariant.medium,
+                            fontWeightVariant: FontWeightVariant.medium,
+                          ),
+                        ),
+                        index: 1,
+                      ),
+                      CommonSizedBoxWidget.height(16.h),
+                    ],
                   ),
-                  index: 1,
                 ),
-                CommonSizedBoxWidget.height(16.h),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        // Amount Card
-                        _buildAnimatedWidget(
-                            child: AmountCardWidget(
-                              homeBloc: homeBloc,
-                            ),
-                            index: 2),
-                        CommonSizedBoxWidget.height(16.h),
-                        // Credit Debit Scan
-                        _buildAnimatedWidget(
-                            child: const CreditDebitScanWidget(), index: 3),
-
-                        CommonSizedBoxWidget.height(16.h),
-                        // AI Assistant
-                        //   _buildAnimatedWidget(
-                        //       child: const AiAssistantWidget(), index: 4),
-
-                        //  CommonSizedBoxWidget.height(16.h),
-                        // Recent Transaction
-                        // _buildAnimatedWidget(
-                        //     child: const RecentTransactionWidget(), index: 5),
-                        // CommonSizedBoxWidget.height(50.h),
-                      ],
-                    ),
+                SliverToBoxAdapter(
+                  child: _buildAnimatedWidget(
+                    child: AmountCardWidget(homeBloc: _homeBloc),
+                    index: 2,
                   ),
+                ),
+                 SliverToBoxAdapter(
+                  child: CommonSizedBoxWidget.height(16.h),
+                ),
+                SliverToBoxAdapter(
+                  child: _buildAnimatedWidget(
+                    child: const CreditDebitScanWidget(),
+                    index: 3,
+                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: CommonSizedBoxWidget.height(16.h),
+                ),
+                SliverToBoxAdapter(
+                  child: _buildAnimatedWidget(
+                    child: const RecentTransactionWidget(),
+                    index: 4,
+                  ),
+                ),
+                SliverToBoxAdapter(
+                  child: CommonSizedBoxWidget.height(50.h),
                 ),
               ],
             ),
