@@ -42,6 +42,7 @@ class _DebitExpenseScreenState extends State<DebitCreditExpenseScreen>
   final TextEditingController _otherDetailsController = TextEditingController();
 
   // Track previous state to prevent duplicate processing
+  RequestStatus<AddExpenseModel>? _previousAddTransactionState;
 
   @override
   void initState() {
@@ -133,18 +134,20 @@ class _DebitExpenseScreenState extends State<DebitCreditExpenseScreen>
       body: BlocConsumer<ExpenseBloc, ExpenseState>(
         bloc: _expenseBloc,
         listener: (context, state) {
-          if (state.addTransactionResponse.isSuccess && mounted) {
+          if (state.addTransactionResponse.isSuccess && mounted && _previousAddTransactionState != state.addTransactionResponse) {
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(content: Text("expense created successfully")),
             );
             clearForm();
-
+            
             context.read<HomeBloc>().add(GetTotalBalanceEvent());
             _expenseBloc.add(GetRecentTransactionsEvent());
+            _previousAddTransactionState = state.addTransactionResponse;
           } else if (state.addTransactionResponse.isError && mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.addTransactionResponse.error ?? "")),
             );
+            _previousAddTransactionState = state.addTransactionResponse;
           }
         },
         builder: (context, state) {
