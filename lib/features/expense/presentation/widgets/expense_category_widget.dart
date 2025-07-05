@@ -2,7 +2,6 @@ import 'package:coinly/core/common/common_elevated_button_widget.dart';
 import 'package:coinly/core/common/common_sized_box_widget.dart';
 import 'package:coinly/core/helper/app_helpers.dart';
 import 'package:coinly/features/expense/bloc/expense_bloc.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:coinly/core/utils/app_colors.dart';
 import 'package:coinly/core/utils/app_styles.dart';
@@ -11,11 +10,13 @@ import 'package:shimmer/shimmer.dart';
 
 class ExpenseCategoryWidget extends StatelessWidget {
   final ExpenseState state;
-  const ExpenseCategoryWidget({super.key, required this.state});
+  final ExpenseBloc expenseBloc;
+  const ExpenseCategoryWidget(
+      {super.key, required this.state, required this.expenseBloc});
 
   @override
   Widget build(BuildContext context) {
-    if (state.getExpenseCategory.isLoading) {
+    if (state.expenseCategory.isLoading) {
       return SingleChildScrollView(
         scrollDirection: Axis.horizontal,
         child: Row(
@@ -50,13 +51,15 @@ class ExpenseCategoryWidget extends StatelessWidget {
         ),
       );
     }
-    if (state.getExpenseCategory.isError) {
+    if (state.expenseCategory.isError) {
       return AppHelpers.buildErrorWidget(
-          state.getExpenseCategory.error ?? "Error loading data");
+          state.expenseCategory.error ?? "Error loading data");
     }
-    if (state.getExpenseCategory.isEmpty) {
+    if (state.expenseCategory.isEmpty) {
       return AppHelpers.buildEmptyWidget("No recent transactions available");
     }
+
+    final expenseCategory = state.expenseCategory.data?.data ?? [];
 
     return SizedBox(
       height: 35.h,
@@ -64,15 +67,15 @@ class ExpenseCategoryWidget extends StatelessWidget {
         shrinkWrap: true,
         scrollDirection: Axis.horizontal,
         itemBuilder: (context, index) {
-          final selectedExpense = state.selectedExpenseCategory.data ==
-              state.getExpenseCategory.data?[index]["name"];
+          final selectedExpense =
+              state.selectedExpenseCategory.data == expenseCategory[index].id;
           return CommonElevatedButtonWidget(
             onPressed: () {
-              context.read<ExpenseBloc>().add(SelectExpenseCategoryEvent(
-                  category: state.getExpenseCategory.data?[index]["name"]));
+              expenseBloc.add(SelectExpenseCategoryEvent(
+                  categoryId: expenseCategory[index].id!));
             },
             label: Text(
-              state.getExpenseCategory.data?[index]["name"],
+              expenseCategory[index].name ?? "",
               style: AppTextStyles.getStyle(
                 colorVariant: ColorVariant.white,
                 sizeVariant: SizeVariant.mediumSmall,
@@ -90,7 +93,7 @@ class ExpenseCategoryWidget extends StatelessWidget {
           );
         },
         separatorBuilder: (context, index) => CommonSizedBoxWidget.width(8.w),
-        itemCount: state.getExpenseCategory.data?.length ?? 0,
+        itemCount: expenseCategory.length,
       ),
     );
   }

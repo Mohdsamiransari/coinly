@@ -35,10 +35,10 @@ class Data {
   int? id;
   String? expenseName;
   String? expenseDate;
-  Null? expenseNote;
+  String? expenseNote;
   String? expenseCurrency;
   String? expenseMethod;
-  Null? expenseLocation;
+  String? expenseLocation;
   int? expenseAmount;
   String? expenseType;
   int? expenseCategoryId;
@@ -179,12 +179,12 @@ class OwedBy {
   int? id;
   String? email;
   String? username;
-  Null? firstName;
-  Null? lastName;
+  String? firstName;
+  String? lastName;
   Null? totalBalance;
   Null? totalDebit;
   Null? totalCredit;
-  Null? qrCode;
+  String? qrCode;
   String? hash;
   int? otp;
   String? otpExpiration;

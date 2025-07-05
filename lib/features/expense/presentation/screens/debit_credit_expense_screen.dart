@@ -5,9 +5,11 @@ import 'package:coinly/core/common/common_input_widget.dart';
 import 'package:coinly/core/common/common_sized_box_widget.dart';
 import 'package:coinly/core/common/model/request_status.dart';
 import 'package:coinly/features/expense/bloc/expense_bloc.dart';
+import 'package:coinly/features/expense/data/model/add_expense_model.dart';
 import 'package:coinly/features/expense/presentation/widgets/expense_category_widget.dart';
 import 'package:coinly/core/utils/app_strings.dart';
 import 'package:coinly/core/utils/app_styles.dart';
+import 'package:coinly/features/home/bloc/home_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:coinly/core/utils/app_colors.dart';
@@ -27,16 +29,25 @@ class DebitCreditExpenseScreen extends StatefulWidget {
 
 class _DebitExpenseScreenState extends State<DebitCreditExpenseScreen>
     with SingleTickerProviderStateMixin {
+  late final ExpenseBloc _expenseBloc;
+
   DateTime _selectTime = DateTime.now();
-  late TextEditingController _dateController;
   final _formKey = GlobalKey<FormState>();
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
 
+  late TextEditingController _dateController;
+  final TextEditingController _amountController = TextEditingController();
+  final TextEditingController _expenseNameController = TextEditingController();
+  final TextEditingController _otherDetailsController = TextEditingController();
+
+  // Track previous state to prevent duplicate processing
+
   @override
   void initState() {
     super.initState();
-    context.read<ExpenseBloc>().add(GetExpenseCategoryEvent());
+    _expenseBloc = context.read<ExpenseBloc>();
+    _expenseBloc.add(GetExpenseCategoryEvent());
     _dateController = TextEditingController(text: _formatDate(_selectTime));
 
     // Initialize animation
@@ -63,15 +74,35 @@ class _DebitExpenseScreenState extends State<DebitCreditExpenseScreen>
     return DateFormat('yyyy, MMM dd').format(date);
   }
 
-  void _validateAndSubmit(RequestStatus<String> selectedCategoryState) {
+  void _validateAndSubmit(RequestStatus<int> selectedCategoryState) {
     if (_formKey.currentState!.validate() &&
         selectedCategoryState.data != null) {
-     
+      final Map<String, dynamic> expenseData = {
+        "expense_name": _expenseNameController.text,
+        "expense_date": _dateController.text,
+        "expense_amount": int.parse(_amountController.text),
+        "expense_category_id": selectedCategoryState.data,
+        "expense_note": _otherDetailsController.text,
+        "expense_type": widget.isDebitScreen ? "debit" : "credit",
+        "expense_currency": "INR",
+        "expense_method": "upi"
+        // "splits":[{
+        //     "friend_id":8,
+        //     "amount":100
+        // }]
+      };
+      _expenseBloc.add(AddExpenseEvent(data: expenseData));
     } else if (selectedCategoryState.data == null) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text("Please select an expense category.")),
       );
     }
+  }
+
+  void clearForm() {
+    _amountController.clear();
+    _otherDetailsController.clear();
+    _expenseNameController.clear();
   }
 
   @override
@@ -99,7 +130,23 @@ class _DebitExpenseScreenState extends State<DebitCreditExpenseScreen>
         ),
         centerTitle: false,
       ),
-      body: BlocBuilder<ExpenseBloc, ExpenseState>(
+      body: BlocConsumer<ExpenseBloc, ExpenseState>(
+        bloc: _expenseBloc,
+        listener: (context, state) {
+          if (state.addTransactionResponse.isSuccess && mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text("expense created successfully")),
+            );
+            clearForm();
+
+            context.read<HomeBloc>().add(GetTotalBalanceEvent());
+            _expenseBloc.add(GetRecentTransactionsEvent());
+          } else if (state.addTransactionResponse.isError && mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.addTransactionResponse.error ?? "")),
+            );
+          }
+        },
         builder: (context, state) {
           return FadeTransition(
             opacity: _fadeAnimation,
@@ -112,6 +159,7 @@ class _DebitExpenseScreenState extends State<DebitCreditExpenseScreen>
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     CommonInputWidget(
+                      controller: _amountController,
                       isFilled: true,
                       fillColor: AppColors.secondaryBlue,
                       borderRadius: BorderRadius.circular(8.r),
@@ -133,6 +181,9 @@ class _DebitExpenseScreenState extends State<DebitCreditExpenseScreen>
                       ),
                       textInputType: TextInputType.number,
                       validator: (value) {
+                        if (value == "0") {
+                          return "Amount cannot be zero";
+                        }
                         if (value == null || value.isEmpty) {
                           return "Amount cannot be empty";
                         }
@@ -144,6 +195,7 @@ class _DebitExpenseScreenState extends State<DebitCreditExpenseScreen>
                     ),
                     CommonSizedBoxWidget.height(16.h),
                     CommonInputWidget(
+                      controller: _expenseNameController,
                       isFilled: true,
                       fillColor: AppColors.secondaryBlue,
                       borderRadius: BorderRadius.circular(8.r),
@@ -181,16 +233,24 @@ class _DebitExpenseScreenState extends State<DebitCreditExpenseScreen>
                       ),
                       readOnly: true,
                       onTap: _selectDate,
+                      textStyle: AppTextStyles.getStyle(
+                          colorVariant: ColorVariant.primaryWhite,
+                          sizeVariant: SizeVariant.medium,
+                          fontWeightVariant: FontWeightVariant.regular),
                     ),
                     CommonSizedBoxWidget.height(16.h),
                     CommonInputWidget(
+                      controller: _otherDetailsController,
                       isFilled: true,
                       fillColor: AppColors.secondaryBlue,
                       borderRadius: BorderRadius.circular(8.r),
                       hintText: AppStrings.otherDetails,
                     ),
                     CommonSizedBoxWidget.height(16.h),
-                     ExpenseCategoryWidget(state: state,),
+                    ExpenseCategoryWidget(
+                      state: state,
+                      expenseBloc: _expenseBloc,
+                    ),
                     const Spacer(),
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.center,

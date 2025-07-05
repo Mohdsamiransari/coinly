@@ -11,4 +11,6 @@ class ApiEndpoints {
 
   // Expense
   static String transaction = "/expense/user";
+  static String addTransaction = "/expense/create-expense";
+  static String expenseCategory = "/expense-category/all-categories";
 }

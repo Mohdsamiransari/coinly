@@ -53,43 +53,4 @@ class RecentTransactionWidget extends StatelessWidget {
       },
     );
   }
-
-  // Widget _buildTransactionItem(Data? transaction) {
-  //   final result = AppHelpers.dateTimeFunction(transaction?.expenseDate ?? "");
-  //   final amountType = transaction?.expenseType == "debit" ? "-" : "+";
-  //   return ListTile(
-  //     contentPadding: EdgeInsets.zero,
-  //     dense: true,
-  //     minTileHeight: 40.h,
-  //     leading: CircleAvatar(
-  //       backgroundColor: AppColors.secondaryBlue,
-  //       radius: 22.r,
-  //       child: const ImagePreview(path:"assets/images/expenseicon1.png"),
-  //     ),
-  //     title: Text(
-  //       transaction?.expenseName ?? "",
-  //       style: AppTextStyles.getStyle(
-  //         colorVariant: ColorVariant.white,
-  //         sizeVariant: SizeVariant.medium,
-  //         fontWeightVariant: FontWeightVariant.semiBold,
-  //       ),
-  //     ),
-  //     subtitle: Text(
-  //       "${result.date} - ${result.time}",
-  //       style: AppTextStyles.getStyle(
-  //         colorVariant: ColorVariant.primaryWhite,
-  //         sizeVariant: SizeVariant.small,
-  //         fontWeightVariant: FontWeightVariant.medium,
-  //       ),
-  //     ),
-  //     trailing: Text(
-  //       "$amountType\$${transaction?.expenseAmount?.toStringAsFixed(2)}",
-  //       style: AppTextStyles.getStyle(
-  //         colorVariant: ColorVariant.white,
-  //         sizeVariant: SizeVariant.mediumLarge,
-  //         fontWeightVariant: FontWeightVariant.semiBold,
-  //       ),
-  //     ),
-  //   );
-  // }
 }
