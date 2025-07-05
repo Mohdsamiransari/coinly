@@ -2,43 +2,44 @@ part of 'expense_bloc.dart';
 
 @immutable
 class ExpenseState extends Equatable {
-  final RequestStatus<ExpenseModel> transactions;
-  final RequestStatus<List<Data>> filteredTransactions;
-  final RequestStatus addTransaction;
-  final RequestStatus<List<Map<String, dynamic>>> getExpenseCategory;
-  final RequestStatus<String> selectedExpenseCategory;
+  final RequestStatus<expense_model.ExpenseModel> transactions;
+  final RequestStatus<List<expense_model.Data>> filteredTransactions;
+  final RequestStatus<int> selectedExpenseCategory;
+  final RequestStatus<AddExpenseModel> addTransactionResponse;
+  final RequestStatus<ExpenseCategoryModel> expenseCategory;
 
   const ExpenseState({
     this.transactions = const RequestStatus.idle(),
     this.filteredTransactions = const RequestStatus.idle(),
-    this.addTransaction = const RequestStatus.idle(),
-    this.getExpenseCategory = const RequestStatus.idle(),
     this.selectedExpenseCategory = const RequestStatus.idle(),
+    this.addTransactionResponse = const RequestStatus.idle(),
+    this.expenseCategory = const RequestStatus.idle(),
   });
 
   ExpenseState copyWith({
-    RequestStatus<ExpenseModel>? transactions,
-    RequestStatus<List<Data>>? filteredTransactions,
-    RequestStatus? addTransaction,
-    RequestStatus<List<Map<String, dynamic>>>? getExpenseCategory,
-    RequestStatus<String>? selectedExpenseCategory,
+    RequestStatus<expense_model.ExpenseModel>? transactions,
+    RequestStatus<List<expense_model.Data>>? filteredTransactions,
+    RequestStatus<int>? selectedExpenseCategory,
+    RequestStatus<AddExpenseModel>? addTransactionResponse,
+    RequestStatus<ExpenseCategoryModel>? expenseCategory,
   }) {
     return ExpenseState(
       transactions: transactions ?? this.transactions,
       filteredTransactions: filteredTransactions ?? this.filteredTransactions,
-      addTransaction: addTransaction ?? this.addTransaction,
-      getExpenseCategory: getExpenseCategory ?? this.getExpenseCategory,
       selectedExpenseCategory:
           selectedExpenseCategory ?? this.selectedExpenseCategory,
+      addTransactionResponse:
+          addTransactionResponse ?? this.addTransactionResponse,
+      expenseCategory: expenseCategory ?? this.expenseCategory,
     );
   }
 
   @override
   List<Object?> get props => [
         transactions,
-        addTransaction,
-        getExpenseCategory,
         selectedExpenseCategory,
-        filteredTransactions
+        filteredTransactions,
+        addTransactionResponse,
+        expenseCategory,
       ];
 }

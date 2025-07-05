@@ -5,20 +5,21 @@ sealed class ExpenseEvent {}
 
 final class GetRecentTransactionsEvent extends ExpenseEvent {}
 
-final class AddTransactionEvent extends ExpenseEvent {
-  final ExpenseModel transaction;
-  AddTransactionEvent(this.transaction);
-}
-
 final class GetExpenseCategoryEvent extends ExpenseEvent {}
 
 final class SelectExpenseCategoryEvent extends ExpenseEvent {
-  final String category;
-  SelectExpenseCategoryEvent({required this.category});
+  final int categoryId;
+  SelectExpenseCategoryEvent({required this.categoryId});
 }
 
 final class FilterExpenseDataEvent extends ExpenseEvent {
   final String searchKeyword;
 
   FilterExpenseDataEvent({required this.searchKeyword});
+}
+
+final class AddExpenseEvent extends ExpenseEvent {
+  final Map<String, dynamic> data;
+
+  AddExpenseEvent({required this.data});
 }
