@@ -8,6 +8,9 @@ import 'package:coinly/features/friends/presentation/screens/friends_profile_scr
 import 'package:coinly/features/friends/presentation/screens/search_friends_screen.dart';
 import 'package:coinly/features/qr/presentation/screens/qr_code_scanner_screen.dart';
 import 'package:coinly/features/qr/presentation/screens/user_qr_code_screen.dart';
+import 'package:coinly/features/support/presentation/screens/about_screen.dart';
+import 'package:coinly/features/support/presentation/screens/help_screen.dart';
+import 'package:coinly/features/support/presentation/screens/terms_and_conditions_screen.dart';
 import 'package:coinly/core/router/router_constant.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -107,6 +110,29 @@ class AppRouterConfig {
         name: RouterConstant.expenseDetailScreen,
         pageBuilder: (context, state) =>
             const MaterialPage(child: ExpenseDetailScreen()),
+      ),
+
+      // Support
+      GoRoute(
+        path: "/aboutScreen",
+        name: RouterConstant.aboutScreen,
+        pageBuilder: (context, state) {
+          return const MaterialPage(child: AboutScreen());
+        },
+      ),
+      GoRoute(
+        path: "/helpScreen",
+        name: RouterConstant.helpScreen,
+        pageBuilder: (context, state) {
+          return const MaterialPage(child: HelpScreen());
+        },
+      ),
+      GoRoute(
+        path: "/termsAndConditionsScreen",
+        name: RouterConstant.termsAndConditionsScreen,
+        pageBuilder: (context, state) {
+          return const MaterialPage(child: TermsAndConditionsScreen());
+        },
       ),
     ],
   );

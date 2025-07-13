@@ -22,4 +22,9 @@ class RouterConstant {
 
   // Expense
   static String expenseDetailScreen = "expenseDetailScreen";
+
+  // support
+  static String aboutScreen = "aboutScreen";
+  static String helpScreen = "helpScreen";
+  static String termsAndConditionsScreen = "termsAndConditionsScreen";
 }

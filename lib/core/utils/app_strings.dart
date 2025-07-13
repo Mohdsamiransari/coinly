@@ -73,4 +73,7 @@ class AppStrings {
   // Friends
   static const String owedByYou = "Owed by you";
   static const String owedToYou = "Owed to you";
+
+  // Profile
+  static const String profile = "Profile";
 }

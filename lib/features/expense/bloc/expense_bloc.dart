@@ -43,7 +43,7 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
 
       final expenseData = await ExpenseRepository().expenses();
 
-      if (expenseData!.data!.isEmpty) {
+      if (expenseData == null || expenseData.data == null || expenseData.data!.isEmpty) {
         emit(state.copyWith(
           transactions: RequestStatus.empty(),
         ));
@@ -54,7 +54,6 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
       emit(state.copyWith(
         transactions: RequestStatus.success(data: expenseData),
       ));
-      log("sdlfakjdklfjadsfads sdfsdfsd ${expenseData.data?.length}");
     } catch (e) {
       log("Error getting recent transactions: $e");
       emit(state.copyWith(
