@@ -7,6 +7,7 @@ class ExpenseState extends Equatable {
   final RequestStatus<int> selectedExpenseCategory;
   final RequestStatus<AddExpenseModel> addTransactionResponse;
   final RequestStatus<ExpenseCategoryModel> expenseCategory;
+  final RequestStatus<ExpenseFilterModel> expenseFilter;
 
   const ExpenseState({
     this.transactions = const RequestStatus.idle(),
@@ -14,6 +15,7 @@ class ExpenseState extends Equatable {
     this.selectedExpenseCategory = const RequestStatus.idle(),
     this.addTransactionResponse = const RequestStatus.idle(),
     this.expenseCategory = const RequestStatus.idle(),
+    this.expenseFilter = const RequestStatus.idle(),
   });
 
   ExpenseState copyWith({
@@ -22,6 +24,7 @@ class ExpenseState extends Equatable {
     RequestStatus<int>? selectedExpenseCategory,
     RequestStatus<AddExpenseModel>? addTransactionResponse,
     RequestStatus<ExpenseCategoryModel>? expenseCategory,
+    RequestStatus<ExpenseFilterModel>? expenseFilter,
   }) {
     return ExpenseState(
       transactions: transactions ?? this.transactions,
@@ -31,6 +34,7 @@ class ExpenseState extends Equatable {
       addTransactionResponse:
           addTransactionResponse ?? this.addTransactionResponse,
       expenseCategory: expenseCategory ?? this.expenseCategory,
+      expenseFilter: expenseFilter ?? this.expenseFilter,
     );
   }
 
@@ -41,5 +45,6 @@ class ExpenseState extends Equatable {
         filteredTransactions,
         addTransactionResponse,
         expenseCategory,
+        expenseFilter,
       ];
 }

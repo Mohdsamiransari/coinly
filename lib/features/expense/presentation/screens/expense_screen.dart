@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:coinly/core/common/common_bottomsheet_widget.dart';
 import 'package:coinly/core/common/common_button_widget.dart';
 import 'package:coinly/core/common/common_input_widget.dart';
@@ -17,6 +15,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_xlider/flutter_xlider.dart';
+import 'package:go_router/go_router.dart';
 
 class ExpenseScreen extends StatefulWidget {
   const ExpenseScreen({super.key});
@@ -31,7 +30,7 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
   late final ExpenseBloc _expenseBloc;
 
   List<String> expenseType = [
-    "All",
+    "Recharge",
     "Electricity",
     "Groceries",
     "Home",
@@ -41,12 +40,10 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
     "Beauty"
   ];
   List<String> sortName = [
-    "Ascending",
-    "Descending",
-    "Highest Price",
-    "Lowest Price",
     "Newest",
     "Oldest",
+    "Highest Price",
+    "Lowest Price",
   ];
 
   @override
@@ -54,6 +51,12 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
     super.initState();
     _expenseBloc = context.read<ExpenseBloc>()
       ..add(GetRecentTransactionsEvent());
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _expenseBloc.add(ResetFilterEvent());
   }
 
   @override
@@ -91,6 +94,11 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
                     color: searchFocusNode.hasFocus
                         ? AppColors.black
                         : AppColors.primaryGrey,
+                  ),
+                  textStyle: AppTextStyles.getStyle(
+                    colorVariant: ColorVariant.black,
+                    sizeVariant: SizeVariant.medium,
+                    fontWeightVariant: FontWeightVariant.medium,
                   ),
                   hintText: AppStrings.search,
                   hintTextStyle: AppTextStyles.getStyle(
@@ -142,14 +150,16 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
         }
 
         // If filter is active (success or empty), use filtered results
-        final isFiltering = filteredTransactionsState.isSuccess || filteredTransactionsState.isEmpty;
+        final isFiltering = filteredTransactionsState.isSuccess ||
+            filteredTransactionsState.isEmpty;
         final transactions = isFiltering
             ? (filteredTransactionsState.data ?? [])
             : (recentTransactionState.data?.data ?? []);
         final reversedTransactions = transactions.reversed.toList();
 
         if (isFiltering && reversedTransactions.isEmpty) {
-          return AppHelpers.buildEmptyWidget("No transactions found for your search");
+          return AppHelpers.buildEmptyWidget(
+              "No transactions found for your search");
         }
 
         return Expanded(
@@ -180,132 +190,163 @@ class _ExpenseScreenState extends State<ExpenseScreen> {
       bgColor: AppColors.primaryWhite,
       barColor: AppColors.secondaryBlue,
       context: context,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.start,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(
-            height: 40.h,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
-                return CommonButtonWidget(
-                  height: 40.h,
-                  btnLabel: expenseType[index],
-                  btnLabelStyle: AppTextStyles.getStyle(
-                    colorVariant: ColorVariant.white,
-                    sizeVariant: SizeVariant.mediumSmall,
-                    fontWeightVariant: FontWeightVariant.medium,
-                  ),
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
-                  backgroundColor: AppColors.secondaryBlue,
-                );
-              },
-              separatorBuilder: (context, index) =>
-                  CommonSizedBoxWidget.width(8.w),
-              itemCount: expenseType.length,
-            ),
-          ),
-          CommonSizedBoxWidget.height(16.w),
-          Text(
-            "Sort by",
-            style: AppTextStyles.getStyle(
-              colorVariant: ColorVariant.primary,
-              sizeVariant: SizeVariant.medium,
-              fontWeightVariant: FontWeightVariant.medium,
-            ),
-          ),
-          CommonSizedBoxWidget.height(16.w),
-          SizedBox(
-            height: 40.h,
-            child: ListView.separated(
-              scrollDirection: Axis.horizontal,
-              itemBuilder: (context, index) {
-                return CommonButtonWidget(
-                  height: 40.h,
-                  btnLabel: sortName[index],
-                  btnLabelStyle: AppTextStyles.getStyle(
-                    colorVariant: ColorVariant.white,
-                    sizeVariant: SizeVariant.mediumSmall,
-                    fontWeightVariant: FontWeightVariant.medium,
-                  ),
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
-                  backgroundColor: AppColors.secondaryBlue,
-                );
-              },
-              separatorBuilder: (context, index) =>
-                  CommonSizedBoxWidget.width(8.w),
-              itemCount: sortName.length,
-            ),
-          ),
-          CommonSizedBoxWidget.height(16.w),
-          Text(
-            "Amount",
-            style: AppTextStyles.getStyle(
-              colorVariant: ColorVariant.primary,
-              sizeVariant: SizeVariant.medium,
-              fontWeightVariant: FontWeightVariant.medium,
-            ),
-          ),
-          FlutterSlider(
-            values: const [300],
-            max: 20000,
-            min: 0,
-            trackBar: FlutterSliderTrackBar(
-              inactiveTrackBar: BoxDecoration(
-                color: AppColors.white,
-                borderRadius: BorderRadius.circular(24.r),
-              ),
-              activeTrackBar: BoxDecoration(
-                color: AppColors.secondaryBlue,
-                borderRadius: BorderRadius.circular(24.r),
-              ),
-            ),
-            handler: FlutterSliderHandler(
-                decoration: const BoxDecoration(
-                  color: AppColors.secondaryBlue,
-                  shape: BoxShape.circle,
-                ),
-                child: const SizedBox.shrink()),
-            onDragging: (handlerIndex, lowerValue, upperValue) {
-              log("Lower Value: $lowerValue");
-              setState(() {});
-            },
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: BlocBuilder<ExpenseBloc, ExpenseState>(
+        builder: (context, state) {
+          final expenseFilterState = state.expenseFilter;
+          final selectedSortName = expenseFilterState.data?.sortName;
+          final selectedExpenseTypes = expenseFilterState.data?.expenseType;
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
             children: [
-              CommonButtonWidget(
-                width: MediaQuery.of(context).size.width / 2.3,
+              SizedBox(
                 height: 40.h,
-                btnLabel: "Cancel",
-                btnLabelStyle: AppTextStyles.getStyle(
-                  colorVariant: ColorVariant.secondary,
-                  sizeVariant: SizeVariant.medium,
-                  fontWeightVariant: FontWeightVariant.bold,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    return CommonButtonWidget(
+                      onPressed: () {
+                        _expenseBloc.add(ExpenseFilterEvent(
+                            expenseType: expenseType[index]));
+                      },
+                      height: 40.h,
+                      btnLabel: expenseType[index],
+                      btnLabelStyle: AppTextStyles.getStyle(
+                        colorVariant: ColorVariant.white,
+                        sizeVariant: SizeVariant.mediumSmall,
+                        fontWeightVariant: FontWeightVariant.medium,
+                      ),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 24.w, vertical: 12.h),
+                      backgroundColor: selectedExpenseTypes != null &&
+                              selectedExpenseTypes.contains(expenseType[index])
+                          ? AppColors.secondaryBlue
+                          : AppColors.tertiaryBlue,
+                    );
+                  },
+                  separatorBuilder: (context, index) =>
+                      CommonSizedBoxWidget.width(8.w),
+                  itemCount: expenseType.length,
                 ),
-                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
-                backgroundColor: AppColors.white,
               ),
-              CommonButtonWidget(
-                width: MediaQuery.of(context).size.width / 2.3,
-                height: 40.h,
-                btnLabel: "Apply",
-                btnLabelStyle: AppTextStyles.getStyle(
-                  colorVariant: ColorVariant.white,
+              CommonSizedBoxWidget.height(16.w),
+              Text(
+                "Sort by",
+                style: AppTextStyles.getStyle(
+                  colorVariant: ColorVariant.primary,
                   sizeVariant: SizeVariant.medium,
-                  fontWeightVariant: FontWeightVariant.bold,
+                  fontWeightVariant: FontWeightVariant.medium,
                 ),
-                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
-                backgroundColor: AppColors.secondaryBlue,
+              ),
+              CommonSizedBoxWidget.height(16.w),
+              SizedBox(
+                height: 40.h,
+                child: ListView.separated(
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    return CommonButtonWidget(
+                      onPressed: () {
+                        _expenseBloc.add(ExpenseFilterEvent(
+                            sortName: sortName[index].toLowerCase()));
+                      },
+                      height: 40.h,
+                      btnLabel: sortName[index],
+                      btnLabelStyle: AppTextStyles.getStyle(
+                        colorVariant: ColorVariant.white,
+                        sizeVariant: SizeVariant.mediumSmall,
+                        fontWeightVariant: FontWeightVariant.medium,
+                      ),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: 24.w, vertical: 12.h),
+                      backgroundColor: _expenseBloc.selectedSortName ==
+                              sortName[index].toLowerCase()
+                          ? AppColors.secondaryBlue
+                          : AppColors.tertiaryBlue,
+                    );
+                  },
+                  separatorBuilder: (context, index) =>
+                      CommonSizedBoxWidget.width(8.w),
+                  itemCount: sortName.length,
+                ),
+              ),
+              CommonSizedBoxWidget.height(16.w),
+              Text(
+                "Amount",
+                style: AppTextStyles.getStyle(
+                  colorVariant: ColorVariant.primary,
+                  sizeVariant: SizeVariant.medium,
+                  fontWeightVariant: FontWeightVariant.medium,
+                ),
+              ),
+              FlutterSlider(
+                values: [state.expenseFilter.data?.amount ?? 0],
+                max: 200000,
+                min: 0,
+                trackBar: FlutterSliderTrackBar(
+                  inactiveTrackBar: BoxDecoration(
+                    color: AppColors.white,
+                    borderRadius: BorderRadius.circular(24.r),
+                  ),
+                  activeTrackBar: BoxDecoration(
+                    color: AppColors.secondaryBlue,
+                    borderRadius: BorderRadius.circular(24.r),
+                  ),
+                ),
+                handler: FlutterSliderHandler(
+                    decoration: const BoxDecoration(
+                      color: AppColors.secondaryBlue,
+                      shape: BoxShape.circle,
+                    ),
+                    child: const SizedBox.shrink()),
+                onDragCompleted: (handlerIndex, lowerValue, upperValue) {
+                  _expenseBloc.add(ExpenseFilterEvent(amount: lowerValue));
+                },
+              ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  CommonButtonWidget(
+                    onPressed: () {
+                      _expenseBloc.add(ResetFilterEvent());
+                      GoRouter.of(context).pop();
+                    },
+                    width: MediaQuery.of(context).size.width / 2.3,
+                    height: 40.h,
+                    btnLabel: "Reset",
+                    btnLabelStyle: AppTextStyles.getStyle(
+                      colorVariant: ColorVariant.secondary,
+                      sizeVariant: SizeVariant.medium,
+                      fontWeightVariant: FontWeightVariant.bold,
+                    ),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
+                    backgroundColor: AppColors.white,
+                  ),
+                  CommonButtonWidget(
+                    onPressed: () {
+                      _expenseBloc.add(FilterExpenseDataEvent(
+                          searchKeyword: _searchController.text));
+                      GoRouter.of(context).pop();
+                    },
+                    width: MediaQuery.of(context).size.width / 2.3,
+                    height: 40.h,
+                    btnLabel: "Apply",
+                    btnLabelStyle: AppTextStyles.getStyle(
+                      colorVariant: ColorVariant.white,
+                      sizeVariant: SizeVariant.medium,
+                      fontWeightVariant: FontWeightVariant.bold,
+                    ),
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
+                    backgroundColor: AppColors.secondaryBlue,
+                  ),
+                ],
               ),
             ],
-          ),
-        ],
+          );
+        },
       ),
     );
   }

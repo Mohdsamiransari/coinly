@@ -23,3 +23,17 @@ final class AddExpenseEvent extends ExpenseEvent {
 
   AddExpenseEvent({required this.data});
 }
+
+final class ExpenseFilterEvent extends ExpenseEvent {
+  final String? sortName;
+  final String? expenseType;
+  final double? amount;
+
+  ExpenseFilterEvent({
+    this.sortName,
+    this.expenseType,
+    this.amount,
+  });
+}
+
+final class ResetFilterEvent extends ExpenseEvent {}

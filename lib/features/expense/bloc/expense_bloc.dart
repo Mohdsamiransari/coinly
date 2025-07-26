@@ -5,6 +5,7 @@ import 'package:bloc/bloc.dart';
 import 'package:coinly/core/common/model/request_status.dart';
 import 'package:coinly/features/expense/data/model/add_expense_model.dart';
 import 'package:coinly/features/expense/data/model/expense_category.model.dart';
+import 'package:coinly/features/expense/data/model/expense_filter_model.dart';
 import 'package:coinly/features/expense/data/model/expense_model.dart'
     as expense_model;
 import 'package:coinly/features/expense/data/repositories/expense_repository.dart';
@@ -16,6 +17,10 @@ part 'expense_event.dart';
 part 'expense_state.dart';
 
 class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
+  List<String> expenseTypes = [];
+  String selectedSortName = "newest";
+  double amount = 0;
+
   ExpenseBloc() : super(const ExpenseState()) {
     on<GetRecentTransactionsEvent>(_getRecentTransactionsEvent);
     on<GetExpenseCategoryEvent>(_getExpenseCategoryEvent);
@@ -27,6 +32,8 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
           .asyncExpand(mapper),
     );
     on<AddExpenseEvent>(_addExpenseEvent);
+    on<ExpenseFilterEvent>(_expenseFilterEvent);
+    on<ResetFilterEvent>(_resetFilterEvent);
   }
 
   FutureOr<void> _getRecentTransactionsEvent(
@@ -35,7 +42,7 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
   ) async {
     try {
       emit(state.copyWith(
-        transactions: RequestStatus.loading(),
+        transactions: const RequestStatus.loading(),
       ));
       emit(state.copyWith(
         transactions: RequestStatus.success(data: expense_model.ExpenseModel()),
@@ -43,9 +50,11 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
 
       final expenseData = await ExpenseRepository().expenses();
 
-      if (expenseData == null || expenseData.data == null || expenseData.data!.isEmpty) {
+      if (expenseData == null ||
+          expenseData.data == null ||
+          expenseData.data!.isEmpty) {
         emit(state.copyWith(
-          transactions: RequestStatus.empty(),
+          transactions: const RequestStatus.empty(),
         ));
         return;
       }
@@ -111,24 +120,56 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
   FutureOr<void> _filterExpenseDataEvent(
       FilterExpenseDataEvent event, Emitter<ExpenseState> emit) async {
     try {
-      // If search is empty, clear filtered state
-      if (event.searchKeyword.trim().isEmpty) {
-        emit(state.copyWith(filteredTransactions: const RequestStatus.idle()));
+      final allTransactions = state.transactions.data?.data ?? [];
+
+      // Edge case: No transactions at all
+      if (allTransactions.isEmpty) {
+        emit(state.copyWith(
+          filteredTransactions: const RequestStatus.success(data: []),
+        ));
         return;
       }
-      final expenseDatas = state.transactions.data?.data ?? [];
-      final filteredExpenseData = expenseDatas
-          .where((expense) => expense.expenseName!
-              .toLowerCase()
-              .contains(event.searchKeyword.toLowerCase()))
-          .toList();
-      if (filteredExpenseData.isEmpty) {
-        emit(state.copyWith(filteredTransactions: const RequestStatus.empty()));
+
+      List<expense_model.Data> filteredData = allTransactions.where((expense) {
+        final name = expense.expenseName?.toLowerCase() ?? '';
+        final category = expense.expenseCategory?.name?.toLowerCase() ?? '';
+
+        final matchNames = event.searchKeyword.isEmpty ||
+            name.contains(event.searchKeyword.toLowerCase());
+        final matchesType = expenseTypes.isEmpty ||
+            expenseTypes.toString().toLowerCase().contains(category);
+
+        final matchesAmount = amount == 0 || expense.expenseAmount! <= amount;
+
+        return matchesType && matchesAmount && matchNames;
+      }).toList();
+
+      // Edge case: No match after filtering
+      if (filteredData.isEmpty) {
+        emit(state.copyWith(
+          filteredTransactions: const RequestStatus.success(data: []),
+        ));
         return;
+      }
+      // --- Apply sorting ---
+      switch (selectedSortName) {
+        case 'newest':
+          filteredData.sort((a, b) => b.expenseDate!.compareTo(a.expenseDate!));
+          break;
+        case 'oldest':
+          filteredData.sort((a, b) => a.expenseDate!.compareTo(b.expenseDate!));
+          break;
+        case 'highest price':
+          filteredData
+              .sort((a, b) => a.expenseAmount!.compareTo(b.expenseAmount!));
+          break;
+        case 'lowest price':
+          filteredData
+              .sort((a, b) => b.expenseAmount!.compareTo(a.expenseAmount!));
+          break;
       }
       emit(state.copyWith(
-          filteredTransactions:
-              RequestStatus.success(data: filteredExpenseData)));
+          filteredTransactions: RequestStatus.success(data: filteredData)));
     } catch (e) {
       emit(state.copyWith(transactions: state.transactions));
     }
@@ -145,22 +186,69 @@ class ExpenseBloc extends Bloc<ExpenseEvent, ExpenseState> {
 
       final response = await ExpenseRepository().addTransaction(event.data);
       log("New Expense Response $response");
-      
+
       if (response?.data == null) {
         emit(state.copyWith(
             addTransactionResponse:
                 const RequestStatus.error("Error Creating Expense")));
         return;
       }
-      
+
       // Emit success state only once
       emit(state.copyWith(
           addTransactionResponse: RequestStatus.success(data: response)));
-          
     } catch (e) {
       emit(state.copyWith(
           addTransactionResponse:
               const RequestStatus.error("Error Creating Expense")));
+    }
+  }
+
+  FutureOr<void> _expenseFilterEvent(
+    ExpenseFilterEvent event,
+    Emitter<ExpenseState> emit,
+  ) {
+    try {
+      emit(state.copyWith(expenseFilter: const RequestStatus.loading()));
+
+      selectedSortName = event.sortName ?? selectedSortName;
+      if (event.expenseType != null) {
+        if (expenseTypes.contains(event.expenseType)) {
+          expenseTypes.remove(event.expenseType);
+        } else {
+          expenseTypes.add(event.expenseType!);
+        }
+      }
+      amount = event.amount ?? amount;
+      final updatedData = ExpenseFilterModel(
+        sortName: selectedSortName,
+        expenseType: expenseTypes,
+        amount: amount,
+      );
+      emit(state.copyWith(
+        expenseFilter: RequestStatus.success(data: updatedData),
+      ));
+    } catch (e) {
+      emit(state.copyWith(
+        expenseFilter: const RequestStatus.error("Error Filtering"),
+      ));
+    }
+  }
+
+  FutureOr<void> _resetFilterEvent(
+      ResetFilterEvent event, Emitter<ExpenseState> emit) {
+    try {
+      selectedSortName = "";
+      expenseTypes.clear();
+      amount = 0;
+      add(FilterExpenseDataEvent(searchKeyword: ""));
+      emit(state.copyWith(
+        expenseFilter: RequestStatus.success(data: ExpenseFilterModel()),
+      ));
+    } catch (e) {
+      emit(state.copyWith(
+          filteredTransactions:
+              const RequestStatus.error("Error reset filter")));
     }
   }
 }
